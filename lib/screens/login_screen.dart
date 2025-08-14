@@ -9,122 +9,205 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final creamHeight =
+        screenHeight * 0.35; // tinggi cream sama kaya di painter
+
     return Scaffold(
-      body: SafeArea(
-        // biar tidak ketabrak status bar
-        child: Center(
-          child: SingleChildScrollView(
-            // biar bisa scroll kalau overflow
-            padding: const EdgeInsets.all(30.0),
+      body: Stack(
+        children: [
+          /// Background Curve
+          CustomPaint(
+            size: Size(MediaQuery.of(context).size.width, screenHeight),
+            painter: BackgroundCurvePainter(),
+          ),
+
+          SafeArea(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Welcome to HinosaApp',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26,
-                    color: Color(0xFF1C1C1C),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  'Sign in to continue',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
-                    color: Color(0xFF1C1C1C),
-                  ),
-                ),
-                const SizedBox(height: 26),
-
-                TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 26),
-
+                /// Logo di tengah area cream
                 SizedBox(
-                  width: double.infinity,
-                  height: 49,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: handle login
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3B62FF),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  height: creamHeight,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/logo.png',
+                      height: 300, // atur sesuai kebutuhan
                     ),
                   ),
                 ),
-                const SizedBox(height: 26),
 
-                const Text(
-                  'Forgot Password?',
-                  style: TextStyle(fontSize: 14, color: Color(0xFF87879D)),
-                ),
-                const SizedBox(height: 10),
+                /// Konten lain (di atas background merah)
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 30),
+                        Text(
+                          'Masuk',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 32.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 26),
 
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Signupscreen(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "Don't have an account? Sign Up",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
+                        /// email
+                        TextField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(
+                            labelText: 'Masukkan email anda',
+                            labelStyle: TextStyle(color: Colors.white),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        /// Password
+                        TextField(
+                          controller: _passwordController,
+                          decoration: const InputDecoration(
+                            labelText: 'Masukkan kata sandi anda',
+                            labelStyle: TextStyle(color: Colors.white),
+                            border: OutlineInputBorder(),
+                          ),
+                          obscureText: true,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Text(
+                              'Lupa kata sandi? Reset',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFFEEEEEE),
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 26),
+
+                        /// Login button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 49,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              'Masuk',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFBB002C),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 26),
+
+                        /// Forgot Password
+                        const SizedBox(height: 10),
+
+                        /// Navigate to Sign Up
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Signupscreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Belum memiliki akun? Daftar",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
+}
+
+/// Custom Painter untuk background curve
+class BackgroundCurvePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..style = PaintingStyle.fill;
+
+    /// Bagian bawah merah (full background)
+    paint.color = const Color(0xFFBB002C); // merah
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
+
+    /// --- GARIS PUTIH (separator) ---
+    paint.color = Colors.white;
+    Path whitePath =
+        Path()
+          ..moveTo(0, 0)
+          ..lineTo(0, size.height * 0.35)
+          ..quadraticBezierTo(
+            size.width * 0.5,
+            size.height * 0.55, // lebih smooth
+            size.width,
+            size.height * 0.35,
+          )
+          ..lineTo(size.width, 0)
+          ..close();
+    canvas.drawPath(whitePath, paint);
+
+    /// --- CREAM ---
+    paint.color = const Color(0xFFF5E6CC);
+    Path creamPath =
+        Path()
+          ..moveTo(0, 0)
+          ..lineTo(
+            0,
+            size.height * 0.34,
+          ) // agak dikit di atas biar kelihatan garis putih
+          ..quadraticBezierTo(
+            size.width * 0.5,
+            size.height * 0.54,
+            size.width,
+            size.height * 0.34,
+          )
+          ..lineTo(size.width, 0)
+          ..close();
+
+    canvas.drawPath(creamPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

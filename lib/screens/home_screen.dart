@@ -11,7 +11,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text("Selamat datang di aplikasi Hinossa")),
+      body: Center(
+        child: Text(
+          "Selamat datang di aplikasi Hinossa",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      ),
     );
   }
 }
