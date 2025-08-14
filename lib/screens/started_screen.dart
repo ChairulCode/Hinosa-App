@@ -15,15 +15,16 @@ class _StartedScreenState extends State<StartedScreen> {
   final List<Map<String, String>> onboardingData = [
     {
       "title": "Hello 👋",
-      "desc": "Ini adalah aplikasi pembelajaran interaktif.",
+      "desc": "Hinosa adalah aplikasi pembelajaran sejarah yang interaktif.",
     },
     {
-      "title": "Belajar Mudah",
-      "desc": "Materi disajikan dengan cara yang sederhana.",
+      "title": "Belajar Sejarah lebih mudah dengan kami 🔥",
+      "desc": "Materi disajikan dengan cara yang sederhana, ringkas dan jelas.",
     },
     {
-      "title": "Ayo Mulai",
-      "desc": "Daftar atau login untuk memulai pengalaman belajar.",
+      "title": "Ayo Mulai Pembelajaranmu 🚀",
+      "desc":
+          "Mari bergabung bersama kami, untuk lebih tau tentang sejarah tanah air kita",
     },
   ];
 
@@ -68,9 +69,11 @@ class _StartedScreenState extends State<StartedScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           onboardingData[index]["title"]!,
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 28,
                             color: Colors.black,

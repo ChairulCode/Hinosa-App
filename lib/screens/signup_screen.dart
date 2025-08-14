@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/screens/login_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Signupscreen extends StatefulWidget {
   const Signupscreen({super.key});
@@ -12,6 +13,8 @@ class _SignupscreenState extends State<Signupscreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  final supabase = Supabase.instance.client;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -19,11 +22,53 @@ class _SignupscreenState extends State<Signupscreen> {
     super.dispose();
   }
 
+  Future<void> _signup() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage("Email dan password tidak boleh kosong!");
+      return;
+    }
+
+    // Cek kalau user coba daftar sebagai admin
+    if (email == "hinosaadmin@gmail.com") {
+      _showMessage("Email ini hanya bisa digunakan untuk login sebagai Admin!");
+      return;
+    }
+
+    try {
+      final response = await supabase.auth.signUp(
+        email: email,
+        password: password,
+      );
+
+      if (response.user != null) {
+        _showMessage("Akun berhasil dibuat, silakan login!");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+        );
+      }
+    } on AuthException catch (e) {
+      if (e.message.contains("already registered")) {
+        _showMessage("Akun sudah terdaftar, silakan login.");
+      } else {
+        _showMessage("Terjadi error: ${e.message}");
+      }
+    } catch (e) {
+      _showMessage("Error tidak diketahui: $e");
+    }
+  }
+
+  void _showMessage(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final creamHeight =
-        screenHeight * 0.35; // tinggi cream sama kaya di painter
+    final creamHeight = screenHeight * 0.35;
 
     return Scaffold(
       body: Stack(
@@ -41,14 +86,11 @@ class _SignupscreenState extends State<Signupscreen> {
                 SizedBox(
                   height: creamHeight,
                   child: Center(
-                    child: Image.asset(
-                      'assets/logo.png',
-                      height: 300, // atur sesuai kebutuhan
-                    ),
+                    child: Image.asset('assets/logo.png', height: 300),
                   ),
                 ),
 
-                /// Konten lain (di atas background merah)
+                /// Konten
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(30.0),
@@ -56,9 +98,9 @@ class _SignupscreenState extends State<Signupscreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: 30),
-                        Text(
+                        const Text(
                           'Daftar',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 32.0,
                             color: Colors.white,
@@ -66,7 +108,7 @@ class _SignupscreenState extends State<Signupscreen> {
                         ),
                         const SizedBox(height: 26),
 
-                        /// email
+                        /// Email
                         TextField(
                           controller: _emailController,
                           decoration: const InputDecoration(
@@ -89,8 +131,8 @@ class _SignupscreenState extends State<Signupscreen> {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const Text(
+                          children: const [
+                            Text(
                               'Lupa kata sandi? Reset',
                               style: TextStyle(
                                 fontSize: 14,
@@ -102,12 +144,12 @@ class _SignupscreenState extends State<Signupscreen> {
                         ),
                         const SizedBox(height: 26),
 
-                        /// Login button
+                        /// Signup button
                         SizedBox(
                           width: double.infinity,
                           height: 49,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: _signup,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
@@ -119,17 +161,13 @@ class _SignupscreenState extends State<Signupscreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: const Color(0xFFBB002C),
+                                color: Color(0xFFBB002C),
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 26),
 
-                        /// Forgot Password
-                        const SizedBox(height: 10),
-
-                        /// Navigate to Sign Up
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -140,7 +178,7 @@ class _SignupscreenState extends State<Signupscreen> {
                             );
                           },
                           child: const Text(
-                            "Belum memiliki akun? Masuk",
+                            "Sudah punya akun? Masuk",
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white,
@@ -161,17 +199,17 @@ class _SignupscreenState extends State<Signupscreen> {
   }
 }
 
-/// Custom Painter untuk background curve
+/// Custom Painter
 class BackgroundCurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
 
-    /// Bagian bawah merah (full background)
-    paint.color = const Color(0xFFBB002C); // merah
+    /// Background merah
+    paint.color = const Color(0xFFBB002C);
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
 
-    /// --- GARIS PUTIH (separator) ---
+    /// Garis putih
     paint.color = Colors.white;
     Path whitePath =
         Path()
@@ -179,7 +217,7 @@ class BackgroundCurvePainter extends CustomPainter {
           ..lineTo(0, size.height * 0.35)
           ..quadraticBezierTo(
             size.width * 0.5,
-            size.height * 0.55, // lebih smooth
+            size.height * 0.55,
             size.width,
             size.height * 0.35,
           )
@@ -187,15 +225,12 @@ class BackgroundCurvePainter extends CustomPainter {
           ..close();
     canvas.drawPath(whitePath, paint);
 
-    /// --- CREAM ---
+    /// Cream
     paint.color = const Color(0xFFF5E6CC);
     Path creamPath =
         Path()
           ..moveTo(0, 0)
-          ..lineTo(
-            0,
-            size.height * 0.34,
-          ) // agak dikit di atas biar kelihatan garis putih
+          ..lineTo(0, size.height * 0.34)
           ..quadraticBezierTo(
             size.width * 0.5,
             size.height * 0.54,
