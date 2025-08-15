@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/screens/login_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Signupscreen extends StatefulWidget {
@@ -44,6 +45,16 @@ class _SignupscreenState extends State<Signupscreen> {
       );
 
       if (response.user != null) {
+        final user = response.user!;
+
+        // Setelah berhasil signup → insert ke tabel profiles
+        await supabase.from('profiles').insert({
+          'id': user.id,
+          'email': user.email,
+          'role': 'user', // default role user
+          'created_at': DateTime.now().toIso8601String(),
+        });
+
         _showMessage("Akun berhasil dibuat, silakan login!");
         Navigator.pushReplacement(
           context,
@@ -59,6 +70,21 @@ class _SignupscreenState extends State<Signupscreen> {
     } catch (e) {
       _showMessage("Error tidak diketahui: $e");
     }
+  }
+
+  Future<void> _signupWithGoogle() async {
+    try {
+      await supabase.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: "io.supabase.flutter://login-callback/",
+      );
+    } on AuthException catch (e) {
+      _showMessage("Gagal login dengan Google: ${e.message}");
+    } catch (e) {
+      _showMessage("Error tidak diketahui: $e");
+    }
+
+    print('Current session: ${Supabase.instance.client.auth.currentSession}');
   }
 
   void _showMessage(String msg) {
@@ -82,7 +108,7 @@ class _SignupscreenState extends State<Signupscreen> {
           SafeArea(
             child: Column(
               children: [
-                /// Logo di tengah area cream
+                /// Logo
                 SizedBox(
                   height: creamHeight,
                   child: Center(
@@ -129,6 +155,8 @@ class _SignupscreenState extends State<Signupscreen> {
                           ),
                           obscureText: true,
                         ),
+                        const SizedBox(height: 10),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: const [
@@ -138,7 +166,6 @@ class _SignupscreenState extends State<Signupscreen> {
                                 fontSize: 14,
                                 color: Color(0xFFEEEEEE),
                               ),
-                              textAlign: TextAlign.right,
                             ),
                           ],
                         ),
@@ -162,6 +189,31 @@ class _SignupscreenState extends State<Signupscreen> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFFBB002C),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        /// Google Signup Button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 49,
+                          child: ElevatedButton.icon(
+                            onPressed: _signupWithGoogle,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            icon: Image.asset('assets/google.png', height: 24),
+                            label: const Text(
+                              'Daftar dengan Google',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
                               ),
                             ),
                           ),

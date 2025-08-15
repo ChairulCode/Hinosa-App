@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hinosaapp/screens/signup_screen.dart';
 import 'package:hinosaapp/screens/admin_screen.dart';
 import 'package:hinosaapp/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -48,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response.user != null) {
-        // ✅ Jika berhasil login user
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -58,6 +58,25 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       _showMessage("Login gagal: $e");
+    }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    try {
+      await supabase.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: "io.supabase.flutter://login-callback/",
+      );
+
+      final user = supabase.auth.currentUser;
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } catch (e) {
+      _showMessage("Login Google gagal: $e");
     }
   }
 
@@ -75,24 +94,19 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          /// Background Curve
           CustomPaint(
             size: Size(MediaQuery.of(context).size.width, screenHeight),
             painter: BackgroundCurvePainter(),
           ),
-
           SafeArea(
             child: Column(
               children: [
-                /// Logo
                 SizedBox(
                   height: creamHeight,
                   child: Center(
                     child: Image.asset('assets/logo.png', height: 180),
                   ),
                 ),
-
-                /// Konten Form
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(30.0),
@@ -110,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 26),
 
-                        /// Email
+                        // Email TextField
                         TextField(
                           controller: _emailController,
                           style: const TextStyle(color: Colors.white),
@@ -129,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        /// Password
+                        // Password TextField
                         TextField(
                           controller: _passwordController,
                           style: const TextStyle(color: Colors.white),
@@ -149,6 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 10),
 
+                        // Forgot password
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: const [
@@ -163,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 26),
 
-                        /// Login button
+                        // Login button
                         SizedBox(
                           width: double.infinity,
                           height: 49,
@@ -185,9 +200,34 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 26),
 
-                        /// Navigate to Sign Up
+                        const SizedBox(height: 20),
+
+                        // Google login button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 49,
+                          child: ElevatedButton.icon(
+                            onPressed: _loginWithGoogle,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            icon: Image.asset("assets/google.png", height: 24),
+                            label: const Text(
+                              "Login dengan Google",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFBB002C),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 26),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -217,51 +257,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
-
-/// Custom Painter untuk background curve
-class BackgroundCurvePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..style = PaintingStyle.fill;
-
-    /// merah background
-    paint.color = const Color(0xFFBB002C);
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
-
-    /// Garis putih
-    paint.color = Colors.white;
-    Path whitePath =
-        Path()
-          ..moveTo(0, 0)
-          ..lineTo(0, size.height * 0.35)
-          ..quadraticBezierTo(
-            size.width * 0.5,
-            size.height * 0.55,
-            size.width,
-            size.height * 0.35,
-          )
-          ..lineTo(size.width, 0)
-          ..close();
-    canvas.drawPath(whitePath, paint);
-
-    /// Cream
-    paint.color = const Color(0xFFF5E6CC);
-    Path creamPath =
-        Path()
-          ..moveTo(0, 0)
-          ..lineTo(0, size.height * 0.34)
-          ..quadraticBezierTo(
-            size.width * 0.5,
-            size.height * 0.54,
-            size.width,
-            size.height * 0.34,
-          )
-          ..lineTo(size.width, 0)
-          ..close();
-    canvas.drawPath(creamPath, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
