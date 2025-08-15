@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/screens/login_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Signupscreen extends StatefulWidget {
