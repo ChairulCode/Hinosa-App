@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart'; // import file login
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'home_screen.dart';
+import 'login_screen.dart';
 
 class StartedScreen extends StatefulWidget {
   const StartedScreen({super.key});
@@ -9,161 +11,48 @@ class StartedScreen extends StatefulWidget {
 }
 
 class _StartedScreenState extends State<StartedScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  final List<Map<String, String>> onboardingData = [
-    {
-      "title": "Hello 👋",
-      "desc": "Hinosa adalah aplikasi pembelajaran sejarah yang interaktif.",
-    },
-    {
-      "title": "Belajar Sejarah lebih mudah dengan kami 🔥",
-      "desc": "Materi disajikan dengan cara yang sederhana, ringkas dan jelas.",
-    },
-    {
-      "title": "Ayo Mulai Pembelajaranmu 🚀",
-      "desc":
-          "Mari bergabung bersama kami, untuk lebih tau tentang sejarah tanah air kita",
-    },
-  ];
-
-  void _nextPage() {
-    if (_currentPage < onboardingData.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    }
+  @override
+  void initState() {
+    super.initState();
+    _checkAuth();
   }
 
-  void _previousPage() {
-    if (_currentPage > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+  Future<void> _checkAuth() async {
+    // kasih delay biar splash keliatan
+    await Future.delayed(const Duration(seconds: 2));
+
+    final session = Supabase.instance.client.auth.currentSession;
+
+    if (session != null) {
+      // User sudah login → langsung Home
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } else {
+      // Belum login → ke LoginScreen
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: const Color(0xFFF5E6CC),
-        child: Stack(
+    return const Scaffold(
+      backgroundColor: Color(0xFFF5E6CC),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            PageView.builder(
-              controller: _pageController,
-              itemCount: onboardingData.length,
-              onPageChanged: (index) {
-                setState(() => _currentPage = index);
-              },
-              itemBuilder:
-                  (context, index) => Container(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          onboardingData[index]["title"]!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          onboardingData[index]["desc"]!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-            ),
-
-            /// Dots indicator
-            Positioned(
-              bottom: 80,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  onboardingData.length,
-                  (index) => Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentPage == index ? 16 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color:
-                          _currentPage == index ? Colors.amber : Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            if (_currentPage > 0)
-              Positioned(
-                bottom: 30,
-                left: 20,
-                child: ElevatedButton(
-                  onPressed: _previousPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    "Back",
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                ),
-              ),
-
-            /// Next / Let's Start Button
-            Positioned(
-              bottom: 30,
-              right: 20,
-              child: ElevatedButton(
-                onPressed: _nextPage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  _currentPage == onboardingData.length - 1
-                      ? "Let's Start"
-                      : "Next",
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
-                ),
-              ),
-            ),
+            FlutterLogo(size: 100),
+            SizedBox(height: 20),
+            CircularProgressIndicator(color: Colors.black),
           ],
         ),
       ),

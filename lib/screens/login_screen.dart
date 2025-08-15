@@ -23,6 +23,28 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  /// 🔹 Cek apakah user sudah ada di tabel profiles
+  Future<void> _checkOrInsertProfile(User user) async {
+    try {
+      final profile =
+          await supabase
+              .from("profiles")
+              .select()
+              .eq("id", user.id)
+              .maybeSingle();
+
+      if (profile == null) {
+        await supabase.from("profiles").insert({
+          "id": user.id,
+          "email": user.email,
+          "created_at": DateTime.now().toIso8601String(),
+        });
+      }
+    } catch (e) {
+      _showMessage("Gagal sinkronisasi profile: $e");
+    }
+  }
+
   Future<void> _login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -47,7 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password,
       );
 
-      if (response.user != null) {
+      final user = response.user;
+      if (user != null) {
+        await _checkOrInsertProfile(user);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -69,6 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final user = supabase.auth.currentUser;
       if (user != null) {
+        await _checkOrInsertProfile(user);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomeScreen()),

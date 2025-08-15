@@ -12,6 +12,8 @@ class Signupscreen extends StatefulWidget {
 class _SignupscreenState extends State<Signupscreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _fullNameController =
+      TextEditingController(); // ✅ Tambah field nama lengkap
 
   final supabase = Supabase.instance.client;
 
@@ -19,19 +21,20 @@ class _SignupscreenState extends State<Signupscreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _fullNameController.dispose();
     super.dispose();
   }
 
   Future<void> _signup() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    final fullName = _fullNameController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
-      _showMessage("Email dan password tidak boleh kosong!");
+    if (email.isEmpty || password.isEmpty || fullName.isEmpty) {
+      _showMessage("Nama lengkap, email, dan password tidak boleh kosong!");
       return;
     }
 
-    // Cek kalau user coba daftar sebagai admin
     if (email == "hinosaadmin@gmail.com") {
       _showMessage("Email ini hanya bisa digunakan untuk login sebagai Admin!");
       return;
@@ -46,12 +49,13 @@ class _SignupscreenState extends State<Signupscreen> {
       if (response.user != null) {
         final user = response.user!;
 
-        // Setelah berhasil signup → insert ke tabel profiles
         await supabase.from('profiles').insert({
           'id': user.id,
           'email': user.email,
-          'role': 'user', // default role user
+          'full_name': fullName, // ✅ Simpan nama lengkap
+          'avatar_url': null,
           'created_at': DateTime.now().toIso8601String(),
+          'updated_at': DateTime.now().toIso8601String(),
         });
 
         _showMessage("Akun berhasil dibuat, silakan login!");
@@ -77,13 +81,48 @@ class _SignupscreenState extends State<Signupscreen> {
         OAuthProvider.google,
         redirectTo: "io.supabase.flutter://login-callback/",
       );
+
+      supabase.auth.onAuthStateChange.listen((data) async {
+        final session = data.session;
+        final user = session?.user;
+
+        if (user != null) {
+          final profile =
+              await supabase
+                  .from('profiles')
+                  .select()
+                  .eq('id', user.id)
+                  .maybeSingle();
+
+          if (profile == null) {
+            await supabase.from('profiles').insert({
+              'id': user.id,
+              'email': user.email,
+              'full_name':
+                  user.userMetadata?['full_name'], // ✅ Nama dari Google
+              'avatar_url': user.userMetadata?['avatar_url'],
+              'created_at': DateTime.now().toIso8601String(),
+              'updated_at': DateTime.now().toIso8601String(),
+            });
+
+            _showMessage("Akun baru berhasil dibuat, silakan login!");
+          } else {
+            _showMessage("Akun ini sudah terdaftar, silakan login!");
+          }
+
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          }
+        }
+      });
     } on AuthException catch (e) {
       _showMessage("Gagal login dengan Google: ${e.message}");
     } catch (e) {
       _showMessage("Error tidak diketahui: $e");
     }
-
-    print('Current session: ${Supabase.instance.client.auth.currentSession}');
   }
 
   void _showMessage(String msg) {
@@ -98,7 +137,6 @@ class _SignupscreenState extends State<Signupscreen> {
     return Scaffold(
       body: Stack(
         children: [
-          /// Background Curve
           CustomPaint(
             size: Size(MediaQuery.of(context).size.width, screenHeight),
             painter: BackgroundCurvePainter(),
@@ -107,7 +145,6 @@ class _SignupscreenState extends State<Signupscreen> {
           SafeArea(
             child: Column(
               children: [
-                /// Logo
                 SizedBox(
                   height: creamHeight,
                   child: Center(
@@ -115,7 +152,6 @@ class _SignupscreenState extends State<Signupscreen> {
                   ),
                 ),
 
-                /// Konten
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(30.0),
@@ -132,6 +168,17 @@ class _SignupscreenState extends State<Signupscreen> {
                           ),
                         ),
                         const SizedBox(height: 26),
+
+                        /// Nama Lengkap ✅
+                        TextField(
+                          controller: _fullNameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Nama Lengkap',
+                            labelStyle: TextStyle(color: Colors.white),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
 
                         /// Email
                         TextField(
@@ -256,11 +303,9 @@ class BackgroundCurvePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
 
-    /// Background merah
     paint.color = const Color(0xFFBB002C);
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
 
-    /// Garis putih
     paint.color = Colors.white;
     Path whitePath =
         Path()
@@ -276,7 +321,6 @@ class BackgroundCurvePainter extends CustomPainter {
           ..close();
     canvas.drawPath(whitePath, paint);
 
-    /// Cream
     paint.color = const Color(0xFFF5E6CC);
     Path creamPath =
         Path()
