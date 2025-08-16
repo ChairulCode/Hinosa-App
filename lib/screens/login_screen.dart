@@ -23,6 +23,51 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  // fitur reset password
+  Future<void> _showResetPasswordDialog() async {
+    final emailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Reset Password"),
+          content: TextField(
+            controller: emailController,
+            decoration: const InputDecoration(hintText: "Masukkan email anda"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Batal"),
+            ),
+            TextButton(
+              onPressed: () async {
+                final email = emailController.text.trim();
+                if (email.isEmpty) {
+                  _showMessage("Email tidak boleh kosong!");
+                  return;
+                }
+
+                try {
+                  await supabase.auth.resetPasswordForEmail(
+                    email,
+                    redirectTo: "io.supabase.flutter://login-callback/",
+                  );
+                  Navigator.pop(context);
+                  _showMessage("Link reset password sudah dikirim ke $email");
+                } catch (e) {
+                  _showMessage("Gagal mengirim reset password: $e");
+                }
+              },
+              child: const Text("Kirim"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   /// 🔹 Cek apakah user sudah ada di tabel profiles
   Future<void> _checkOrInsertProfile(User user) async {
     try {
@@ -192,16 +237,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Forgot password
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
-                            Text(
-                              'Lupa kata sandi? Reset',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Color(0xFFEEEEEE),
+                          children: [
+                            GestureDetector(
+                              onTap: _showResetPasswordDialog,
+                              child: const Text(
+                                'Lupa kata sandi? Reset',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFFEEEEEE),
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ],
                         ),
+
                         const SizedBox(height: 26),
 
                         // Login button

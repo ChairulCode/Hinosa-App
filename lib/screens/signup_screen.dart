@@ -12,8 +12,7 @@ class Signupscreen extends StatefulWidget {
 class _SignupscreenState extends State<Signupscreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _fullNameController =
-      TextEditingController(); // ✅ Tambah field nama lengkap
+  final _fullNameController = TextEditingController();
 
   final supabase = Supabase.instance.client;
 
@@ -52,7 +51,7 @@ class _SignupscreenState extends State<Signupscreen> {
         await supabase.from('profiles').insert({
           'id': user.id,
           'email': user.email,
-          'full_name': fullName, // ✅ Simpan nama lengkap
+          'full_name': fullName,
           'avatar_url': null,
           'created_at': DateTime.now().toIso8601String(),
           'updated_at': DateTime.now().toIso8601String(),

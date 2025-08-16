@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hinosaapp/service/auth_service.dart'; // ganti sesuai path AuthService lu
-import 'package:hinosaapp/screens/login_screen.dart'; // ganti sesuai path LoginScreen lu
+import 'package:hinosaapp/service/auth_service.dart';
+import 'package:hinosaapp/screens/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     if (shouldLogout == true) {
-      await auth.signOut(); // ✅ logout Supabase + Google
+      await auth.signOut();
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Kalau user nggak login, langsung arahkan ke LoginScreen
     if (!auth.isLoggedIn) {
       Future.microtask(() {
         Navigator.pushReplacement(
