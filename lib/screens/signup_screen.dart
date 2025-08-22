@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/screens/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Signupscreen extends StatefulWidget {
   const Signupscreen({super.key});
@@ -15,6 +16,7 @@ class _SignupscreenState extends State<Signupscreen> {
   final _fullNameController = TextEditingController();
 
   final supabase = Supabase.instance.client;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -25,9 +27,16 @@ class _SignupscreenState extends State<Signupscreen> {
   }
 
   Future<void> _signup() async {
+    if (_isLoading) return;
+
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final fullName = _fullNameController.text.trim();
+
+    print('🔍 DEBUG - Signup attempt:');
+    print('📧 Email: $email');
+    print('👤 Full Name: "$fullName"');
+    print('🔒 Password length: ${password.length}');
 
     if (email.isEmpty || password.isEmpty || fullName.isEmpty) {
       _showMessage("Nama lengkap, email, dan password tidak boleh kosong!");
@@ -39,93 +48,103 @@ class _SignupscreenState extends State<Signupscreen> {
       return;
     }
 
+    setState(() => _isLoading = true);
+
     try {
+      // Step 1: Sign up user only (no profile creation)
+      print('🔑 Step 1: Creating auth user...');
       final response = await supabase.auth.signUp(
         email: email,
         password: password,
       );
 
-      if (response.user != null) {
-        final user = response.user!;
+      final user = response.user;
+      print('✅ User created with ID: ${user?.id}');
 
-        await supabase.from('profiles').insert({
-          'id': user.id,
-          'email': user.email,
-          'full_name': fullName,
-          'avatar_url': null,
-          'created_at': DateTime.now().toIso8601String(),
-          'updated_at': DateTime.now().toIso8601String(),
-        });
+      if (user != null) {
+        // Step 2: Save fullName temporarily in SharedPreferences
+        // This will be used when user logs in for the first time
+        print('💾 Step 2: Saving fullName for later use...');
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('pending_full_name_${user.id}', fullName);
+        await prefs.setString('pending_email_${user.id}', email);
 
-        _showMessage("Akun berhasil dibuat, silakan login!");
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
+        print('✅ Temporary data saved for user ${user.id}');
+
+        // Step 3: Sign out user (they need to confirm email first)
+        await supabase.auth.signOut();
+        print('👋 User signed out - awaiting email confirmation');
+
+        _showMessage(
+          "✅ Akun berhasil dibuat! Silakan cek email untuk konfirmasi, lalu login.",
         );
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+          );
+        }
+      } else {
+        print('❌ User creation failed - no user returned');
+        _showMessage("Gagal membuat akun - tidak ada user yang dikembalikan");
       }
     } on AuthException catch (e) {
+      print('🚫 AuthException: ${e.message}');
       if (e.message.contains("already registered")) {
         _showMessage("Akun sudah terdaftar, silakan login.");
+      } else if (e.message.contains("email address invalid")) {
+        _showMessage("Format email tidak valid.");
+      } else if (e.message.contains("password")) {
+        _showMessage("Password terlalu lemah. Minimal 6 karakter.");
       } else {
-        _showMessage("Terjadi error: ${e.message}");
+        _showMessage("Auth Error: ${e.message}");
       }
     } catch (e) {
+      print('❌ Unexpected error: $e');
       _showMessage("Error tidak diketahui: $e");
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   Future<void> _signupWithGoogle() async {
+    if (_isLoading) return;
+
+    setState(() => _isLoading = true);
+
     try {
+      print('🔍 Starting Google signup...');
+
       await supabase.auth.signInWithOAuth(
         OAuthProvider.google,
         redirectTo: "io.supabase.flutter://login-callback/",
       );
 
-      supabase.auth.onAuthStateChange.listen((data) async {
-        final session = data.session;
-        final user = session?.user;
-
-        if (user != null) {
-          final profile =
-              await supabase
-                  .from('profiles')
-                  .select()
-                  .eq('id', user.id)
-                  .maybeSingle();
-
-          if (profile == null) {
-            await supabase.from('profiles').insert({
-              'id': user.id,
-              'email': user.email,
-              'full_name':
-                  user.userMetadata?['full_name'], // ✅ Nama dari Google
-              'avatar_url': user.userMetadata?['avatar_url'],
-              'created_at': DateTime.now().toIso8601String(),
-              'updated_at': DateTime.now().toIso8601String(),
-            });
-
-            _showMessage("Akun baru berhasil dibuat, silakan login!");
-          } else {
-            _showMessage("Akun ini sudah terdaftar, silakan login!");
-          }
-
-          if (mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
-            );
-          }
-        }
-      });
+      // Google OAuth will handle the redirect
+      // Profile creation will be handled in login screen
+      _showMessage("Redirecting to Google...");
     } on AuthException catch (e) {
+      print('🚫 Google AuthException: ${e.message}');
       _showMessage("Gagal login dengan Google: ${e.message}");
     } catch (e) {
-      _showMessage("Error tidak diketahui: $e");
+      print('❌ Google signup error: $e');
+      _showMessage("Error Google signup: $e");
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   void _showMessage(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          duration: const Duration(seconds: 4),
+          backgroundColor: msg.contains('✅') ? Colors.green : null,
+        ),
+      );
+    }
   }
 
   @override
@@ -140,7 +159,6 @@ class _SignupscreenState extends State<Signupscreen> {
             size: Size(MediaQuery.of(context).size.width, screenHeight),
             painter: BackgroundCurvePainter(),
           ),
-
           SafeArea(
             child: Column(
               children: [
@@ -150,7 +168,6 @@ class _SignupscreenState extends State<Signupscreen> {
                     child: Image.asset('assets/logo.png', height: 300),
                   ),
                 ),
-
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(30.0),
@@ -168,36 +185,63 @@ class _SignupscreenState extends State<Signupscreen> {
                         ),
                         const SizedBox(height: 26),
 
-                        /// Nama Lengkap ✅
+                        // Nama Lengkap
                         TextField(
                           controller: _fullNameController,
+                          enabled: !_isLoading,
                           decoration: const InputDecoration(
                             labelText: 'Nama Lengkap',
                             labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
                           ),
+                          style: const TextStyle(color: Colors.white),
                         ),
                         const SizedBox(height: 16),
 
-                        /// Email
+                        // Email
                         TextField(
                           controller: _emailController,
+                          enabled: !_isLoading,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
                             labelText: 'Masukkan email anda',
                             labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
                           ),
+                          style: const TextStyle(color: Colors.white),
                         ),
                         const SizedBox(height: 16),
 
-                        /// Password
+                        // Password
                         TextField(
                           controller: _passwordController,
+                          enabled: !_isLoading,
                           decoration: const InputDecoration(
                             labelText: 'Masukkan kata sandi anda',
                             labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            helperText: 'Minimal 6 karakter',
+                            helperStyle: TextStyle(color: Colors.white70),
                           ),
+                          style: const TextStyle(color: Colors.white),
                           obscureText: true,
                         ),
                         const SizedBox(height: 10),
@@ -216,46 +260,75 @@ class _SignupscreenState extends State<Signupscreen> {
                         ),
                         const SizedBox(height: 26),
 
-                        /// Signup button
+                        // Signup button
                         SizedBox(
                           width: double.infinity,
                           height: 49,
                           child: ElevatedButton(
-                            onPressed: _signup,
+                            onPressed: _isLoading ? null : _signup,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor:
+                                  _isLoading ? Colors.grey : Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
+                              elevation: 3,
                             ),
-                            child: const Text(
-                              'Daftar',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFFBB002C),
-                              ),
-                            ),
+                            child:
+                                _isLoading
+                                    ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        color: Color(0xFFBB002C),
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                    : const Text(
+                                      'Daftar',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFFBB002C),
+                                      ),
+                                    ),
                           ),
                         ),
                         const SizedBox(height: 16),
 
-                        /// Google Signup Button
+                        // Google Signup Button
                         SizedBox(
                           width: double.infinity,
                           height: 49,
                           child: ElevatedButton.icon(
-                            onPressed: _signupWithGoogle,
+                            onPressed: _isLoading ? null : _signupWithGoogle,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor:
+                                  _isLoading ? Colors.grey : Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
+                              elevation: 3,
                             ),
-                            icon: Image.asset('assets/google.png', height: 24),
-                            label: const Text(
-                              'Daftar dengan Google',
-                              style: TextStyle(
+                            icon:
+                                _isLoading
+                                    ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.black87,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                    : Image.asset(
+                                      'assets/google.png',
+                                      height: 24,
+                                    ),
+                            label: Text(
+                              _isLoading
+                                  ? 'Memproses...'
+                                  : 'Daftar dengan Google',
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black87,
@@ -266,21 +339,43 @@ class _SignupscreenState extends State<Signupscreen> {
                         const SizedBox(height: 26),
 
                         GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
-                          },
-                          child: const Text(
+                          onTap:
+                              _isLoading
+                                  ? null
+                                  : () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => const LoginScreen(),
+                                      ),
+                                    );
+                                  },
+                          child: Text(
                             "Sudah punya akun? Masuk",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white,
+                              color: _isLoading ? Colors.grey : Colors.white,
                               decoration: TextDecoration.underline,
                             ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Info text
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'Setelah mendaftar, silakan cek email untuk konfirmasi akun.',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
@@ -296,7 +391,6 @@ class _SignupscreenState extends State<Signupscreen> {
   }
 }
 
-/// Custom Painter
 class BackgroundCurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
