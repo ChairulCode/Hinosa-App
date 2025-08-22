@@ -24,7 +24,6 @@ class _StartedScreenState extends State<StartedScreen> {
     final session = Supabase.instance.client.auth.currentSession;
 
     if (session != null) {
-      // User sudah login → langsung Home
       if (mounted) {
         Navigator.pushReplacement(
           context,

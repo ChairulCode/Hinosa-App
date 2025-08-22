@@ -12,9 +12,7 @@ class AuthService {
     }
   }
 
-  // ✅ Dapetin user yang sedang login
   User? get currentUser => supabase.auth.currentUser;
 
-  // ✅ Cek apakah user sudah login
   bool get isLoggedIn => currentUser != null;
 }
