@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/screens/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Signupscreen extends StatefulWidget {
   const Signupscreen({super.key});
@@ -51,27 +50,25 @@ class _SignupscreenState extends State<Signupscreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Step 1: Sign up user only (no profile creation)
+      // ✅ Step 1: Buat user di auth + kirim full_name ke metadata
       print('🔑 Step 1: Creating auth user...');
       final response = await supabase.auth.signUp(
         email: email,
         password: password,
+        data: {
+          'full_name': fullName, // dikirim ke raw_user_meta_data
+        },
       );
 
       final user = response.user;
       print('✅ User created with ID: ${user?.id}');
+      print('📝 raw_user_meta_data: ${user?.userMetadata}');
 
       if (user != null) {
-        // Step 2: Save fullName temporarily in SharedPreferences
-        // This will be used when user logs in for the first time
-        print('💾 Step 2: Saving fullName for later use...');
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('pending_full_name_${user.id}', fullName);
-        await prefs.setString('pending_email_${user.id}', email);
+        // ⛔️ Gak usah insert manual ke profiles → trigger yang ngurus
+        print('⏳ Waiting for trigger to insert into profiles...');
 
-        print('✅ Temporary data saved for user ${user.id}');
-
-        // Step 3: Sign out user (they need to confirm email first)
+        // ✅ Sign out biar user harus confirm email dulu
         await supabase.auth.signOut();
         print('👋 User signed out - awaiting email confirmation');
 
@@ -121,8 +118,6 @@ class _SignupscreenState extends State<Signupscreen> {
         redirectTo: "io.supabase.flutter://login-callback/",
       );
 
-      // Google OAuth will handle the redirect
-      // Profile creation will be handled in login screen
       _showMessage("Redirecting to Google...");
     } on AuthException catch (e) {
       print('🚫 Google AuthException: ${e.message}');

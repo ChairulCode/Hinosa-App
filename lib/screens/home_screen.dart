@@ -14,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   String? _fullName;
-  bool _loading = true; // flag supaya tunggu dulu cek login
+  bool _loading = true;
 
   final List<Widget> _pages = [];
 
@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _initUser() async {
-    // cek login dulu
     if (!auth.isLoggedIn) {
       if (mounted) {
         Navigator.pushReplacement(
@@ -36,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    // kalau login, baru ambil profile
     final name = await auth.getFullName();
     debugPrint("✅ Fullname loaded in HomeScreen: $name");
 
@@ -68,8 +66,12 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () => Navigator.of(context).pop(false),
               child: const Text("Tidak"),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
               child: const Text("Ya"),
             ),
           ],
@@ -108,7 +110,15 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
         ],
-        backgroundColor: const Color(0xFFBB002C),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFBB002C), Color(0xFFE53935)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: _pages[_selectedIndex],
 
@@ -137,86 +147,67 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHomeContent() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // === HEADER PROFILE ===
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.blue[50],
-              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                colors: [Colors.redAccent.shade400, Colors.redAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.redAccent.shade200.withOpacity(0.4),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Row(
               children: [
                 const CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.blue,
-                  child: Icon(Icons.person, size: 40, color: Colors.white),
+                  radius: 35,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person, size: 45, color: Colors.redAccent),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Selamat Datang, ${_fullName ?? 'User'}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          // const Icon(Icons.star, color: Colors.amber, size: 18),
-                          const SizedBox(width: 4),
-                          // Text(
-                          //   "Level 1   |   0/120 XP",
-                          //   style: TextStyle(color: Colors.grey[700]),
-                          // ),
-                        ],
-                      ),
-                    ],
+                  child: Text(
+                    "Selamat Datang, ${_fullName ?? 'User'} 👋",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-                // Column(
-                //   children: const [
-                //     Text("💎 0", style: TextStyle(fontWeight: FontWeight.bold)),
-                //     Text("💰 551"),
-                //   ],
-                // ),
               ],
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 25),
 
-          const Text(
-            "Mau belajar apa hari ini?",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 10),
-
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              children: [
-                _buildMenuCard("Belajar", Icons.book, Colors.blue),
-                _buildMenuCard("Flash Card", Icons.school, Colors.green),
-                _buildMenuCard("Kuis & Latihan", Icons.quiz, Colors.orange),
-                _buildMenuCard("Persiapan Belajar", Icons.house, Colors.purple),
-                _buildMenuCard("Konseling", Icons.chat, Colors.teal),
-                _buildMenuCard(
-                  "Tips & Motivasi",
-                  Icons.lightbulb,
-                  Colors.yellow.shade800,
-                ),
-              ],
-            ),
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            children: [
+              _buildMenuCard("Persiapan belajar", Icons.book, Colors.blue),
+              _buildMenuCard("Materi", Icons.bookmark_add, Colors.green),
+              _buildMenuCard("Kuis & Latihan", Icons.quiz, Colors.orange),
+              _buildMenuCard("Flash Card", Icons.card_giftcard, Colors.purple),
+              _buildMenuCard("Konseling", Icons.chat, Colors.teal),
+              _buildMenuCard("Tips & Motivasi", Icons.lightbulb, Colors.amber),
+            ],
           ),
         ],
       ),
@@ -226,23 +217,28 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildMenuCard(String title, IconData icon, Color color) {
     return InkWell(
       onTap: () {},
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(20),
       child: Card(
-        elevation: 4,
-        color: color.withOpacity(0.1),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Center(
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 50, color: color),
-              const SizedBox(height: 10),
+              CircleAvatar(
+                backgroundColor: color.withOpacity(0.15),
+                radius: 30,
+                child: Icon(icon, size: 30, color: color),
+              ),
+              const SizedBox(height: 12),
               Text(
                 title,
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: color,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  // color: color.shade700,
                 ),
               ),
             ],
