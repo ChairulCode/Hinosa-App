@@ -31,40 +31,6 @@ class _SignupscreenState extends State<Signupscreen> {
     super.dispose();
   }
 
-  // Fungsi untuk mengecek apakah email sudah terdaftar
-  Future<bool> _isEmailRegistered(String email) async {
-    try {
-      // Mencoba sign in dengan email dan password dummy
-      // Jika email tidak terdaftar, akan throw error "Invalid login credentials"
-      // Jika email terdaftar, akan throw error "Invalid login credentials" atau berhasil
-
-      // Alternatif: gunakan query ke auth.users jika memiliki akses admin
-      // Atau gunakan fungsi edge function khusus untuk check email
-
-      // Method sederhana: coba reset password
-      await supabase.auth.resetPasswordForEmail(email);
-
-      // Jika tidak ada error, berarti email terdaftar
-      return true;
-    } on AuthException catch (e) {
-      print('🔍 Email check error: ${e.message}');
-
-      // Jika error adalah "User not found" atau similar, email belum terdaftar
-      if (e.message.toLowerCase().contains('user not found') ||
-          e.message.toLowerCase().contains('email not confirmed') ||
-          e.message.toLowerCase().contains('invalid email')) {
-        return false;
-      }
-
-      // Untuk error lainnya, anggap email sudah terdaftar (safer approach)
-      return true;
-    } catch (e) {
-      print('🔍 Unexpected error during email check: $e');
-      // Jika ada error tidak diketahui, anggap email belum terdaftar
-      return false;
-    }
-  }
-
   Future<void> _signup() async {
     if (_isLoading) return;
 
@@ -95,19 +61,6 @@ class _SignupscreenState extends State<Signupscreen> {
     setState(() => _isLoading = true);
 
     try {
-      // ✅ Step 0: Check if email is already registered
-      print('🔍 Step 0: Checking if email is already registered...');
-
-      bool emailExists = await _isEmailRegistered(email);
-
-      if (emailExists) {
-        _showMessage(
-          "⚠️ Akun dengan email ini sudah terdaftar sebelumnya. Silakan gunakan email lain atau login.",
-        );
-        setState(() => _isLoading = false);
-        return;
-      }
-
       print('🔑 Step 1: Creating auth user...');
       final response = await supabase.auth.signUp(
         email: email,
@@ -135,13 +88,20 @@ class _SignupscreenState extends State<Signupscreen> {
       }
     } on AuthException catch (e) {
       print('🚫 AuthException: ${e.message}');
-      if (e.message.toLowerCase().contains("already registered") ||
-          e.message.toLowerCase().contains("email already") ||
-          e.message.toLowerCase().contains("user already exists")) {
+
+      // Check berbagai pesan error untuk email yang sudah terdaftar
+      if (e.message.toLowerCase().contains("user already registered") ||
+          e.message.toLowerCase().contains("email already exists") ||
+          e.message.toLowerCase().contains("user already exists") ||
+          e.message.toLowerCase().contains("already registered") ||
+          e.message.toLowerCase().contains("email address already in use") ||
+          e.message.toLowerCase().contains(
+            "user with this email already exists",
+          )) {
         _showMessage(
           "⚠️ Akun dengan email ini sudah terdaftar sebelumnya. Silakan gunakan email lain atau login.",
         );
-      } else if (e.message.toLowerCase().contains("invalid")) {
+      } else if (e.message.toLowerCase().contains("invalid email")) {
         _showMessage("Format email tidak valid.");
       } else if (e.message.toLowerCase().contains("password")) {
         _showMessage("Password terlalu lemah. Minimal 6 karakter.");
