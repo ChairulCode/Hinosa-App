@@ -12,17 +12,57 @@ class Signupscreen extends StatefulWidget {
 class _SignupscreenState extends State<Signupscreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _fullNameController = TextEditingController();
 
   final supabase = Supabase.instance.client;
   bool _isLoading = false;
 
+  // buat toggle show password
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _fullNameController.dispose();
     super.dispose();
+  }
+
+  // Fungsi untuk mengecek apakah email sudah terdaftar
+  Future<bool> _isEmailRegistered(String email) async {
+    try {
+      // Mencoba sign in dengan email dan password dummy
+      // Jika email tidak terdaftar, akan throw error "Invalid login credentials"
+      // Jika email terdaftar, akan throw error "Invalid login credentials" atau berhasil
+
+      // Alternatif: gunakan query ke auth.users jika memiliki akses admin
+      // Atau gunakan fungsi edge function khusus untuk check email
+
+      // Method sederhana: coba reset password
+      await supabase.auth.resetPasswordForEmail(email);
+
+      // Jika tidak ada error, berarti email terdaftar
+      return true;
+    } on AuthException catch (e) {
+      print('🔍 Email check error: ${e.message}');
+
+      // Jika error adalah "User not found" atau similar, email belum terdaftar
+      if (e.message.toLowerCase().contains('user not found') ||
+          e.message.toLowerCase().contains('email not confirmed') ||
+          e.message.toLowerCase().contains('invalid email')) {
+        return false;
+      }
+
+      // Untuk error lainnya, anggap email sudah terdaftar (safer approach)
+      return true;
+    } catch (e) {
+      print('🔍 Unexpected error during email check: $e');
+      // Jika ada error tidak diketahui, anggap email belum terdaftar
+      return false;
+    }
   }
 
   Future<void> _signup() async {
@@ -30,15 +70,20 @@ class _SignupscreenState extends State<Signupscreen> {
 
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
     final fullName = _fullNameController.text.trim();
 
-    print('🔍 DEBUG - Signup attempt:');
-    print('📧 Email: $email');
-    print('👤 Full Name: "$fullName"');
-    print('🔒 Password length: ${password.length}');
-
-    if (email.isEmpty || password.isEmpty || fullName.isEmpty) {
+    // ✅ Validasi awal
+    if (email.isEmpty ||
+        password.isEmpty ||
+        fullName.isEmpty ||
+        confirmPassword.isEmpty) {
       _showMessage("Nama lengkap, email, dan password tidak boleh kosong!");
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showMessage("⚠️ Tolong sesuaikan kata sandi anda.");
       return;
     }
 
@@ -50,28 +95,31 @@ class _SignupscreenState extends State<Signupscreen> {
     setState(() => _isLoading = true);
 
     try {
-      // ✅ Step 1: Buat user di auth + kirim full_name ke metadata
+      // ✅ Step 0: Check if email is already registered
+      print('🔍 Step 0: Checking if email is already registered...');
+
+      bool emailExists = await _isEmailRegistered(email);
+
+      if (emailExists) {
+        _showMessage(
+          "⚠️ Akun dengan email ini sudah terdaftar sebelumnya. Silakan gunakan email lain atau login.",
+        );
+        setState(() => _isLoading = false);
+        return;
+      }
+
       print('🔑 Step 1: Creating auth user...');
       final response = await supabase.auth.signUp(
         email: email,
         password: password,
-        data: {
-          'full_name': fullName, // dikirim ke raw_user_meta_data
-        },
+        data: {'full_name': fullName},
       );
 
       final user = response.user;
-      print('✅ User created with ID: ${user?.id}');
-      print('📝 raw_user_meta_data: ${user?.userMetadata}');
-
       if (user != null) {
-        // ⛔️ Gak usah insert manual ke profiles → trigger yang ngurus
-        print('⏳ Waiting for trigger to insert into profiles...');
+        print('✅ User created with ID: ${user.id}');
 
-        // ✅ Sign out biar user harus confirm email dulu
         await supabase.auth.signOut();
-        print('👋 User signed out - awaiting email confirmation');
-
         _showMessage(
           "✅ Akun berhasil dibuat! Silakan cek email untuk konfirmasi, lalu login.",
         );
@@ -83,16 +131,19 @@ class _SignupscreenState extends State<Signupscreen> {
           );
         }
       } else {
-        print('❌ User creation failed - no user returned');
-        _showMessage("Gagal membuat akun - tidak ada user yang dikembalikan");
+        _showMessage("❌ Gagal membuat akun - tidak ada user yang dikembalikan");
       }
     } on AuthException catch (e) {
       print('🚫 AuthException: ${e.message}');
-      if (e.message.contains("already registered")) {
-        _showMessage("Akun sudah terdaftar, silakan login.");
-      } else if (e.message.contains("email address invalid")) {
+      if (e.message.toLowerCase().contains("already registered") ||
+          e.message.toLowerCase().contains("email already") ||
+          e.message.toLowerCase().contains("user already exists")) {
+        _showMessage(
+          "⚠️ Akun dengan email ini sudah terdaftar sebelumnya. Silakan gunakan email lain atau login.",
+        );
+      } else if (e.message.toLowerCase().contains("invalid")) {
         _showMessage("Format email tidak valid.");
-      } else if (e.message.contains("password")) {
+      } else if (e.message.toLowerCase().contains("password")) {
         _showMessage("Password terlalu lemah. Minimal 6 karakter.");
       } else {
         _showMessage("Auth Error: ${e.message}");
@@ -105,38 +156,18 @@ class _SignupscreenState extends State<Signupscreen> {
     }
   }
 
-  Future<void> _signupWithGoogle() async {
-    if (_isLoading) return;
-
-    setState(() => _isLoading = true);
-
-    try {
-      print('🔍 Starting Google signup...');
-
-      await supabase.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: "io.supabase.flutter://login-callback/",
-      );
-
-      _showMessage("Redirecting to Google...");
-    } on AuthException catch (e) {
-      print('🚫 Google AuthException: ${e.message}');
-      _showMessage("Gagal login dengan Google: ${e.message}");
-    } catch (e) {
-      print('❌ Google signup error: $e');
-      _showMessage("Error Google signup: $e");
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
   void _showMessage(String msg) {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(msg),
           duration: const Duration(seconds: 4),
-          backgroundColor: msg.contains('✅') ? Colors.green : null,
+          backgroundColor:
+              msg.contains('✅')
+                  ? Colors.green
+                  : msg.contains('⚠️')
+                  ? Colors.orange
+                  : null,
         ),
       );
     }
@@ -223,21 +254,68 @@ class _SignupscreenState extends State<Signupscreen> {
                         TextField(
                           controller: _passwordController,
                           enabled: !_isLoading,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Masukkan kata sandi anda',
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: OutlineInputBorder(),
-                            enabledBorder: OutlineInputBorder(
+                            labelStyle: const TextStyle(color: Colors.white),
+                            border: const OutlineInputBorder(),
+                            enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white70),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
                             helperText: 'Minimal 6 karakter',
-                            helperStyle: TextStyle(color: Colors.white70),
+                            helperStyle: const TextStyle(color: Colors.white70),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                            ),
                           ),
                           style: const TextStyle(color: Colors.white),
-                          obscureText: true,
+                          obscureText: _obscurePassword,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Confirm Password
+                        TextField(
+                          controller: _confirmPasswordController,
+                          enabled: !_isLoading,
+                          decoration: InputDecoration(
+                            labelText: 'Konfirmasi kata sandi anda',
+                            labelStyle: const TextStyle(color: Colors.white),
+                            border: const OutlineInputBorder(),
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureConfirmPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureConfirmPassword =
+                                      !_obscureConfirmPassword;
+                                });
+                              },
+                            ),
+                          ),
+                          style: const TextStyle(color: Colors.white),
+                          obscureText: _obscureConfirmPassword,
                         ),
                         const SizedBox(height: 10),
 
@@ -296,7 +374,7 @@ class _SignupscreenState extends State<Signupscreen> {
                           width: double.infinity,
                           height: 49,
                           child: ElevatedButton.icon(
-                            onPressed: _isLoading ? null : _signupWithGoogle,
+                            onPressed: _isLoading ? null : () {},
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   _isLoading ? Colors.grey : Colors.white,
@@ -356,8 +434,6 @@ class _SignupscreenState extends State<Signupscreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-
-                        // Info text
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
@@ -390,7 +466,6 @@ class BackgroundCurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..style = PaintingStyle.fill;
-
     paint.color = const Color(0xFFBB002C);
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
 
@@ -422,7 +497,6 @@ class BackgroundCurvePainter extends CustomPainter {
           )
           ..lineTo(size.width, 0)
           ..close();
-
     canvas.drawPath(creamPath, paint);
   }
 

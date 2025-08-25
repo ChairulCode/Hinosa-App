@@ -126,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
         _showMessage("Akun tidak ditemukan, silakan daftar terlebih dahulu.");
       }
     } catch (e) {
-      _showMessage("Login gagal: $e");
+      _showMessage(
+        "Login gagal: akun tidak ditemukan, silahkan daftar terlebih dahulu",
+      );
     }
   }
 
