@@ -126,15 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.notifications_none, color: Colors.white),
-              onPressed: () {
-                // aksi notif
-              },
-            ),
-            const SizedBox(width: 8),
-          ],
+          actions: [const SizedBox(width: 8)],
         ),
       ),
 
@@ -195,7 +187,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMenuCard(String title, IconData icon, Color color) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        if (title == "Materi") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const MateriScreen()),
+          );
+        } else if (title == "Soal") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const SoalScreen()),
+          );
+        } else if (title == "Flash Card") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const FlashCardScreen()),
+          );
+        } else if (title == "Glosarium") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const GlosariumScreen()),
+          );
+        }
+      },
       borderRadius: BorderRadius.circular(20),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -341,7 +355,6 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 40),
-            // Avatar dengan ring keren
             const CircleAvatar(
               radius: 62,
               backgroundColor: Color(0xFFBB002C),
@@ -352,7 +365,6 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            // Profile Info Card
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               decoration: BoxDecoration(
@@ -401,7 +413,6 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            // Logout Button
             SizedBox(
               width: double.infinity,
               height: 55,
@@ -430,6 +441,76 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 40),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ===================== SCREEN TAMBAHAN =====================
+
+class MateriScreen extends StatelessWidget {
+  const MateriScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Materi"),
+        backgroundColor: const Color(0xFFBB002C),
+      ),
+      body: const Center(
+        child: Text("Halaman Materi", style: TextStyle(fontSize: 20)),
+      ),
+    );
+  }
+}
+
+class SoalScreen extends StatelessWidget {
+  const SoalScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Soal"),
+        backgroundColor: const Color(0xFFBB002C),
+      ),
+      body: const Center(
+        child: Text("Halaman Soal", style: TextStyle(fontSize: 20)),
+      ),
+    );
+  }
+}
+
+class FlashCardScreen extends StatelessWidget {
+  const FlashCardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Flash Card"),
+        backgroundColor: const Color(0xFFBB002C),
+      ),
+      body: const Center(
+        child: Text("Halaman Flash Card", style: TextStyle(fontSize: 20)),
+      ),
+    );
+  }
+}
+
+class GlosariumScreen extends StatelessWidget {
+  const GlosariumScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Glosarium"),
+        backgroundColor: const Color(0xFFBB002C),
+      ),
+      body: const Center(
+        child: Text("Halaman Glosarium", style: TextStyle(fontSize: 20)),
       ),
     );
   }
