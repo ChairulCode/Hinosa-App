@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/service/auth_service.dart';
 import 'package:hinosaapp/screens/login_screen.dart';
+import 'package:hinosaapp/screens/profile_screen.dart';
+import 'package:hinosaapp/screens/materi_screen.dart';
+import 'package:hinosaapp/screens/soal_screen.dart';
+import 'package:hinosaapp/screens/flashcard_screen.dart';
+import 'package:hinosaapp/screens/glosarium_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -129,7 +134,6 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [const SizedBox(width: 8)],
         ),
       ),
-
       body: _buildHomeContent(),
     );
   }
@@ -139,7 +143,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
@@ -162,30 +165,24 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 30),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 18,
-              mainAxisSpacing: 18,
-              children: [
-                _buildMenuCard("Materi", Icons.bookmark_add, Colors.green),
-                _buildMenuCard("Soal", Icons.quiz, Colors.orange),
-                _buildMenuCard(
-                  "Flash Card",
-                  Icons.card_giftcard,
-                  Colors.purple,
-                ),
-                _buildMenuCard("Glosarium", Icons.book, Colors.blue),
-              ],
-            ),
+
+            // Cards in Column (not grid)
+            _buildMenuCard("Materi", Icons.menu_book, Colors.red, true),
+            _buildMenuCard("Soal", Icons.edit, Colors.red, false),
+            _buildMenuCard("Flash Card", Icons.menu, Colors.red, true),
+            _buildMenuCard("Glosarium", Icons.book, Colors.red, true),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMenuCard(String title, IconData icon, Color color) {
+  Widget _buildMenuCard(
+    String title,
+    IconData icon,
+    Color color,
+    bool boldText,
+  ) {
     return InkWell(
       onTap: () {
         if (title == "Materi") {
@@ -210,307 +207,30 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
       },
-      borderRadius: BorderRadius.circular(20),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 18),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(
-            colors: [Colors.white, color.withOpacity(0.08)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.15),
-              blurRadius: 8,
-              offset: const Offset(2, 4),
-            ),
-          ],
+          color: const Color(0xFFFCEFEA), // cream background
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFBB002C), width: 1.5),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircleAvatar(
-                backgroundColor: color.withOpacity(0.12),
-                radius: 35,
-                child: Icon(icon, size: 32, color: color),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Profile Screen - Screen baru untuk menampilkan info profil dan logout
-class ProfileScreen extends StatelessWidget {
-  final String fullName;
-  final String email;
-  final AuthService auth;
-
-  const ProfileScreen({
-    super.key,
-    required this.fullName,
-    required this.email,
-    required this.auth,
-  });
-
-  Future<void> _logout(BuildContext context) async {
-    final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Konfirmasi Logout"),
-          content: const Text("Apakah Anda yakin ingin logout?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text("Tidak"),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text("Ya"),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (shouldLogout == true && context.mounted) {
-      await auth.signOut();
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
-          (route) => false,
-        );
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: AppBar(
-          centerTitle: true,
-          elevation: 0,
-          title: const Text(
-            "Profile",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Colors.white,
-            ),
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFBB002C), Color(0xFFE53935)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 6,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
+        child: Row(
           children: [
-            const SizedBox(height: 40),
-            const CircleAvatar(
-              radius: 62,
-              backgroundColor: Color(0xFFBB002C),
-              child: CircleAvatar(
-                radius: 58,
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, size: 80, color: Color(0xFFBB002C)),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12.withOpacity(0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(
-                      Icons.person_outline,
-                      color: Color(0xFFBB002C),
-                    ),
-                    title: const Text("Nama Lengkap"),
-                    subtitle: Text(
-                      fullName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(
-                      Icons.email_outlined,
-                      color: Color(0xFFBB002C),
-                    ),
-                    title: const Text("Email"),
-                    subtitle: Text(
-                      email,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton.icon(
-                onPressed: () => _logout(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFBB002C),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 24,
-                  ),
-                  elevation: 6,
-                  shadowColor: Colors.redAccent.withOpacity(0.4),
-                ),
-                icon: const Icon(Icons.logout, size: 22),
-                label: const Text(
-                  "Logout",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            Icon(icon, size: 28, color: color),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: boldText ? FontWeight.bold : FontWeight.w500,
+                  color: color,
                 ),
               ),
             ),
-            const SizedBox(height: 40),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ===================== SCREEN TAMBAHAN =====================
-
-class MateriScreen extends StatelessWidget {
-  const MateriScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Materi"),
-        backgroundColor: const Color(0xFFBB002C),
-      ),
-      body: const Center(
-        child: Text("Halaman Materi", style: TextStyle(fontSize: 20)),
-      ),
-    );
-  }
-}
-
-class SoalScreen extends StatelessWidget {
-  const SoalScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Soal"),
-        backgroundColor: const Color(0xFFBB002C),
-      ),
-      body: const Center(
-        child: Text("Halaman Soal", style: TextStyle(fontSize: 20)),
-      ),
-    );
-  }
-}
-
-class FlashCardScreen extends StatelessWidget {
-  const FlashCardScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Flash Card"),
-        backgroundColor: const Color(0xFFBB002C),
-      ),
-      body: const Center(
-        child: Text("Halaman Flash Card", style: TextStyle(fontSize: 20)),
-      ),
-    );
-  }
-}
-
-class GlosariumScreen extends StatelessWidget {
-  const GlosariumScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Glosarium"),
-        backgroundColor: const Color(0xFFBB002C),
-      ),
-      body: const Center(
-        child: Text("Halaman Glosarium", style: TextStyle(fontSize: 20)),
       ),
     );
   }
