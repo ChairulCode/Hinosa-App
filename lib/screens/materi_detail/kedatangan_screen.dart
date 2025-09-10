@@ -1,6 +1,6 @@
-import 'dart:ui';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:hinosaapp/screens/materi_screen.dart';
 
 class KedatanganJepangDetail extends BaseMateriDetail {
@@ -12,32 +12,66 @@ class KedatanganJepangDetail extends BaseMateriDetail {
 
 class _KedatanganJepangDetailState
     extends BaseMateriDetailState<KedatanganJepangDetail> {
-  @override
-  String get title => 'Kedatangan Jepang di Indonesia';
+  String materiTitle = "";
+  Color materiColor = Colors.blue;
+  List<Map<String, dynamic>> materiSections = [];
+  bool isLoading = true;
 
   @override
-  Color get color => Colors.blue;
+  void initState() {
+    super.initState();
+    loadMateriFromJson();
+  }
+
+  Future<void> loadMateriFromJson() async {
+    final String response = await rootBundle.loadString(
+      "assets/data/data_kedatangan.json",
+    );
+    final data = json.decode(response);
+
+    setState(() {
+      materiTitle = data["title"];
+      materiColor = _parseColor(data["color"]);
+      materiSections =
+          (data["sections"] as List).map((s) {
+            return {
+              "title": s["title"],
+              "content": List<String>.from(s["content"]),
+            };
+          }).toList();
+      isLoading = false;
+    });
+  }
+
+  Color _parseColor(String colorName) {
+    switch (colorName.toLowerCase()) {
+      case "red":
+        return Colors.red;
+      case "green":
+        return Colors.green;
+      case "blue":
+        return Colors.blue;
+      case "yellow":
+        return Colors.yellow;
+      default:
+        return Colors.blueGrey;
+    }
+  }
 
   @override
-  List<Map<String, dynamic>> get sections => [
-    {
-      'title': '1. Masuknya Jepang di Indonesia',
-      'content': [
-        'Pada 8 Desember 1941, Jepang melancarkan serangan besar-besaran ke Pearl Harbor, markas Angkatan Laut Amerika Serikat di Pasifik.',
-        'Target berikutnya adalah Indonesia (Hindia Belanda) karena kaya sumber daya alam: minyak bumi, timah, dan aluminium.',
-        'Awal Januari 1942, pasukan Jepang mendarat di Ambon, menguasai Maluku, lalu merebut Tarakan dan Balikpapan (12 Januari).',
-        'Pada 5 Maret 1942: Batavia (Jakarta) direbut Jepang',
-        '8 Maret 1942: Belanda menyerah tanpa syarat dalam Kapitulasi Kalijati, Subang',
-      ],
-    },
-    {
-      'title': '2. Sambutan Rakyat Indonesia',
-      'content': [
-        'Rakyat Indonesia menyambut Jepang dengan gembira sebagai "Saudara Tua"',
-        'Antusiasme dipengaruhi oleh kebencian terhadap Belanda dan ramalan Jayabaya',
-        'Jepang mengusung slogan Hakko Ichiu "Satu Keluarga di Bawah Langit"',
-        'Membentuk Gerakan Tiga A dengan slogan: Nippon Cahaya Asia, Nippon Pelindung Asia, Nippon Pemimpin Asia',
-      ],
-    },
-  ];
+  String get title => materiTitle;
+
+  @override
+  Color get color => materiColor;
+
+  @override
+  List<Map<String, dynamic>> get sections => materiSections;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    return super.build(context);
+  }
 }
