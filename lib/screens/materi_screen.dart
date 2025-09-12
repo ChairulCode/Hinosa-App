@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hinosaapp/screens/materi_detail/organisasi_screen.dart';
+import 'package:hinosaapp/screens/materi_detail/pergerakan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/pengerahan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/drama_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/kedatangan_screen.dart';
@@ -23,13 +23,13 @@ class _MateriScreenState extends State<MateriScreen> {
       'widget': const KedatanganJepangDetail(),
     },
     {
-      'title': 'Organisasi pergerakan pada masa pendudukan Jepang',
+      'title': 'Pergerakan Indonesia dan jepang',
       'subtitle': 'Pembelajaran tingkat menengah',
       'icon': Icons.trending_up,
       'color': Colors.green,
       'progress': 0.0,
       'id': 'organisasi_pergerakan',
-      'widget': const OrganisasiPergerakanDetail(),
+      'widget': const PergerakanScreenDetail(),
     },
     {
       'title': 'Pengerahan dan penindasan versus perlawanan',
