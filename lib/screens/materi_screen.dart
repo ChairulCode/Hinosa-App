@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/screens/materi_detail/pergerakan_screen.dart';
-import 'package:hinosaapp/screens/materi_detail/pengerahan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/drama_screen.dart';
+import 'package:hinosaapp/screens/materi_detail/mobilasi_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/kedatangan_screen.dart';
 
 class MateriScreen extends StatefulWidget {
@@ -32,13 +32,13 @@ class _MateriScreenState extends State<MateriScreen> {
       'widget': const PergerakanScreenDetail(),
     },
     {
-      'title': 'Pengerahan dan penindasan versus perlawanan',
+      'title': 'Mobilisasi Rakyat',
       'subtitle': 'Penerapan dalam kehidupan nyata',
       'icon': Icons.assignment,
       'color': Colors.orange,
       'progress': 0.0,
       'id': 'pengerahan_penindasan',
-      'widget': const PengerahanPenindasanDetail(),
+      'widget': const MobilasiScreenDetail(),
     },
     {
       'title': 'Drama akhir sang tirani',
