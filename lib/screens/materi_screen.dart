@@ -5,6 +5,7 @@ import 'package:hinosaapp/screens/materi_detail/mobilasi_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/kedatangan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/pendidikan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/perlawanan_screen.dart';
+import 'package:hinosaapp/screens/materi_detail/janji_screen.dart';
 
 class MateriScreen extends StatefulWidget {
   const MateriScreen({super.key});
@@ -76,7 +77,7 @@ class _MateriScreenState extends State<MateriScreen> {
       'color': Colors.teal,
       'progress': 0.0,
       'id': 'sosial_ekonomi',
-      'widget': const Placeholder(),
+      'widget': const JanjiScreenDetail(),
     },
     {
       'title': 'Menjelang Proklamasi',

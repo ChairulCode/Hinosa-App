@@ -70,6 +70,7 @@ flutter:
     - assets/data/data_ekonomi.json
     - assets/data/data_pendidikan.json
     - assets/data/data_perlawanan.json
+    - assets/data/data_janji.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
