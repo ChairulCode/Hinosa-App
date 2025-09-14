@@ -3,6 +3,8 @@ import 'package:hinosaapp/screens/materi_detail/pergerakan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/ekonomi_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/mobilasi_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/kedatangan_screen.dart';
+import 'package:hinosaapp/screens/materi_detail/pendidikan_screen.dart';
+import 'package:hinosaapp/screens/materi_detail/perlawanan_screen.dart';
 
 class MateriScreen extends StatefulWidget {
   const MateriScreen({super.key});
@@ -56,7 +58,7 @@ class _MateriScreenState extends State<MateriScreen> {
       'color': Colors.blueAccent,
       'progress': 0.0,
       'id': 'pendidikan_propaganda',
-      'widget': const Placeholder(),
+      'widget': const PendidikanScreenDetail(),
     },
     {
       'title': 'Perlawanan Rakyat Terhadap Jepang',
@@ -65,7 +67,7 @@ class _MateriScreenState extends State<MateriScreen> {
       'color': Colors.purple,
       'progress': 0.0,
       'id': 'peta_giyugun',
-      'widget': const Placeholder(),
+      'widget': const PerlawananScreenDetail(),
     },
     {
       'title': 'Janji Mengenai Status Indonesia di Kemudian hari',
