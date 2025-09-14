@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/screens/materi_detail/pergerakan_screen.dart';
-import 'package:hinosaapp/screens/materi_detail/drama_screen.dart';
+import 'package:hinosaapp/screens/materi_detail/ekonomi_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/mobilasi_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/kedatangan_screen.dart';
 
@@ -15,16 +15,16 @@ class _MateriScreenState extends State<MateriScreen> {
   final List<Map<String, dynamic>> materiList = [
     {
       'title': 'Susunan dan Perkembangan Pemerintahan Pendudukan Jepang',
-      'subtitle': 'Materi pengenalan konsep dasar',
+      'subtitle': 'Materi 1',
       'icon': Icons.school,
-      'color': Colors.blue,
+      'color': Colors.redAccent,
       'progress': 0.0,
       'id': 'kedatangan_jepang',
       'widget': const KedatanganJepangDetail(),
     },
     {
-      'title': 'Pergerakan Indonesia dan jepang',
-      'subtitle': 'Pembelajaran tingkat menengah',
+      'title': 'Pergerakan Indonesia dan Jepang',
+      'subtitle': 'Materi 2',
       'icon': Icons.trending_up,
       'color': Colors.green,
       'progress': 0.0,
@@ -33,7 +33,7 @@ class _MateriScreenState extends State<MateriScreen> {
     },
     {
       'title': 'Mobilisasi Rakyat',
-      'subtitle': 'Penerapan dalam kehidupan nyata',
+      'subtitle': 'Materi 3',
       'icon': Icons.assignment,
       'color': Colors.orange,
       'progress': 0.0,
@@ -41,13 +41,49 @@ class _MateriScreenState extends State<MateriScreen> {
       'widget': const MobilasiScreenDetail(),
     },
     {
-      'title': 'Drama akhir sang tirani',
-      'subtitle': 'Penilaian pemahaman materi',
+      'title': 'Ekonomi Perang',
+      'subtitle': 'Materi 4',
       'icon': Icons.assessment,
       'color': Colors.red,
       'progress': 0.0,
+      'id': 'organisasi_perang',
+      'widget': const EkonomiScreenDetail(),
+    },
+    {
+      'title': 'Pendidikan, Komunikasi Sosial, dan Budaya',
+      'subtitle': 'Materi 5',
+      'icon': Icons.menu_book,
+      'color': Colors.blueAccent,
+      'progress': 0.0,
+      'id': 'pendidikan_propaganda',
+      'widget': const Placeholder(),
+    },
+    {
+      'title': 'Perlawanan Rakyat Terhadap Jepang',
+      'subtitle': 'Materi 6',
+      'icon': Icons.security,
+      'color': Colors.purple,
+      'progress': 0.0,
+      'id': 'peta_giyugun',
+      'widget': const Placeholder(),
+    },
+    {
+      'title': 'Janji Mengenai Status Indonesia di Kemudian hari',
+      'subtitle': 'Materi 7',
+      'icon': Icons.people,
+      'color': Colors.teal,
+      'progress': 0.0,
+      'id': 'sosial_ekonomi',
+      'widget': const Placeholder(),
+    },
+    {
+      'title': 'Menjelang Proklamasi',
+      'subtitle': 'Materi 8',
+      'icon': Icons.history,
+      'color': Colors.brown,
+      'progress': 0.0,
       'id': 'drama_akhir',
-      'widget': const DramaAkhirDetail(),
+      'widget': const Placeholder(),
     },
   ];
 
@@ -88,7 +124,7 @@ class _MateriScreenState extends State<MateriScreen> {
           child: AppBar(
             centerTitle: true,
             elevation: 0,
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.redAccent,
             title: const Text(
               "Materi Pembelajaran",
               style: TextStyle(
@@ -472,43 +508,3 @@ abstract class BaseMateriDetailState<T extends BaseMateriDetail>
     );
   }
 }
-
-// // kedatangan_jepang_detail.dart
-// class KedatanganJepangDetail extends BaseMateriDetail {
-//   const KedatanganJepangDetail({super.key});
-
-//   @override
-//   State<KedatanganJepangDetail> createState() => _KedatanganJepangDetailState();
-// }
-
-// class _KedatanganJepangDetailState
-//     extends BaseMateriDetailState<KedatanganJepangDetail> {
-//   @override
-//   String get title => 'Kedatangan Jepang di Indonesia';
-
-//   @override
-//   Color get color => Colors.blue;
-
-//   @override
-//   List<Map<String, dynamic>> get sections => [
-//     {
-//       'title': '1. Masuknya Jepang di Indonesia',
-//       'content': [
-//         'Pada 8 Desember 1941, Jepang melancarkan serangan besar-besaran ke Pearl Harbor, markas Angkatan Laut Amerika Serikat di Pasifik.',
-//         'Target berikutnya adalah Indonesia (Hindia Belanda) karena kaya sumber daya alam: minyak bumi, timah, dan aluminium.',
-//         'Awal Januari 1942, pasukan Jepang mendarat di Ambon, menguasai Maluku, lalu merebut Tarakan dan Balikpapan (12 Januari).',
-//         'Pada 5 Maret 1942: Batavia (Jakarta) direbut Jepang',
-//         '8 Maret 1942: Belanda menyerah tanpa syarat dalam Kapitulasi Kalijati, Subang',
-//       ],
-//     },
-//     {
-//       'title': '2. Sambutan Rakyat Indonesia',
-//       'content': [
-//         'Rakyat Indonesia menyambut Jepang dengan gembira sebagai "Saudara Tua"',
-//         'Antusiasme dipengaruhi oleh kebencian terhadap Belanda dan ramalan Jayabaya',
-//         'Jepang mengusung slogan Hakko Ichiu "Satu Keluarga di Bawah Langit"',
-//         'Membentuk Gerakan Tiga A dengan slogan: Nippon Cahaya Asia, Nippon Pelindung Asia, Nippon Pemimpin Asia',
-//       ],
-//     },
-//   ];
-// }

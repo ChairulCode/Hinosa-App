@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hinosaapp/screens/materi_screen.dart';
 
-class PergerakanScreenDetail extends BaseMateriDetail {
-  const PergerakanScreenDetail({super.key});
+class EkonomiScreenDetail extends BaseMateriDetail {
+  const EkonomiScreenDetail({super.key});
 
   @override
-  State<PergerakanScreenDetail> createState() => _PergerakanScreenDetailState();
+  State<EkonomiScreenDetail> createState() => _EkonomiScreenDetailState();
 }
 
-class _PergerakanScreenDetailState
-    extends BaseMateriDetailState<PergerakanScreenDetail> {
+class _EkonomiScreenDetailState
+    extends BaseMateriDetailState<EkonomiScreenDetail> {
   String materiTitle = "";
-  Color materiColor = Colors.greenAccent;
+  Color materiColor = Colors.blue;
   List<Map<String, dynamic>> materiSections = [];
   bool isLoading = true;
 
@@ -25,7 +25,7 @@ class _PergerakanScreenDetailState
 
   Future<void> loadMateriFromJson() async {
     final String response = await rootBundle.loadString(
-      "assets/data/data_pergerakan.json",
+      "assets/data/data_ekonomi.json",
     );
     final data = json.decode(response);
 

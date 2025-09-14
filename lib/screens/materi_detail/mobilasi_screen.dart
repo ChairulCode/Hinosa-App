@@ -13,7 +13,7 @@ class MobilasiScreenDetail extends BaseMateriDetail {
 class _MobilasiScreenDetailState
     extends BaseMateriDetailState<MobilasiScreenDetail> {
   String materiTitle = "";
-  Color materiColor = Colors.blue;
+  Color materiColor = Colors.orangeAccent;
   List<Map<String, dynamic>> materiSections = [];
   bool isLoading = true;
 
