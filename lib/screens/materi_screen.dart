@@ -6,6 +6,7 @@ import 'package:hinosaapp/screens/materi_detail/kedatangan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/pendidikan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/perlawanan_screen.dart';
 import 'package:hinosaapp/screens/materi_detail/janji_screen.dart';
+import 'package:hinosaapp/screens/materi_detail/proklamasi_screen.dart';
 
 class MateriScreen extends StatefulWidget {
   const MateriScreen({super.key});
@@ -86,7 +87,7 @@ class _MateriScreenState extends State<MateriScreen> {
       'color': Colors.brown,
       'progress': 0.0,
       'id': 'drama_akhir',
-      'widget': const Placeholder(),
+      'widget': const ProklamasiScreenDetail(),
     },
   ];
 
