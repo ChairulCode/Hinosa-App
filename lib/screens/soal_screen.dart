@@ -1,4 +1,7 @@
+// screens/soal_screen.dart
 import 'package:flutter/material.dart';
+import '../screens/model/quiz_data.dart';
+import 'quiz_screen.dart';
 
 class SoalScreen extends StatefulWidget {
   const SoalScreen({super.key});
@@ -7,56 +10,72 @@ class SoalScreen extends StatefulWidget {
   State<SoalScreen> createState() => _SoalScreenState();
 }
 
-class _SoalScreenState extends State<SoalScreen> {
+class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
   final List<Map<String, dynamic>> quizCategories = [
     {
       'title': 'Quiz Dasar',
-      'description': '10 soal pilihan ganda tingkat dasar',
+      'description': 'Soal-soal dasar dari berbagai bab materi',
       'questionCount': 10,
       'difficulty': 'Mudah',
       'icon': Icons.lightbulb_outline,
       'color': Colors.green,
-      'duration': '15 menit',
+      'duration': 15,
+      'chapters': [
+        'Administrasi Pemerintahan',
+        'Organisasi dan Kehidupan Sosial',
+      ],
+      'source': 'basic',
     },
     {
       'title': 'Quiz Menengah',
-      'description': '15 soal pilihan ganda tingkat menengah',
+      'description': 'Soal tingkat menengah untuk menguji pemahaman',
       'questionCount': 15,
-      'difficulty': 'Sedang',
+      'difficulty': 'Sulit', // Sesuaikan dengan getQuestionsByDifficulty
       'icon': Icons.psychology,
-      'color': Colors.orange,
-      'duration': '25 menit',
-    },
-    {
-      'title': 'Quiz Lanjutan',
-      'description': '20 soal pilihan ganda tingkat lanjut',
-      'questionCount': 20,
-      'difficulty': 'Sulit',
-      'icon': Icons.emoji_events,
       'color': Colors.red,
-      'duration': '35 menit',
-    },
-    {
-      'title': 'Quiz Komprehensif',
-      'description': '50 soal campuran semua tingkat',
-      'questionCount': 50,
-      'difficulty': 'Campuran',
-      'icon': Icons.star,
-      'color': Colors.purple,
-      'duration': '60 menit',
+      'duration': 25,
+      'chapters': [
+        'Romusha dan Mobilisasi Rakyat',
+        'Ekonomi Perang',
+        'Pendidikan, Komunikasi Sosial, dan Budaya',
+      ],
+      'source': 'intermediate', // Ubah dari 'quiz2' ke 'intermediate'
     },
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
+        preferredSize: const Size.fromHeight(80),
         child: AppBar(
           centerTitle: true,
           elevation: 0,
           title: const Text(
-            "Latihan Soal",
+            "Latihan Soal Sejarah",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -70,91 +89,211 @@ class _SoalScreenState extends State<SoalScreen> {
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.orange, Color(0xFFFF9800)],
+                colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
+                bottomLeft: Radius.circular(25),
+                bottomRight: Radius.circular(25),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 6,
-                  offset: Offset(0, 3),
-                ),
-              ],
             ),
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue[50]!, Colors.blue[100]!],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Info Card
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue[50]!, Colors.indigo[50]!],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.blue[200]!),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue[200]!),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.info_outline, color: Colors.blue, size: 24),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      "Pilih kategori soal yang ingin Anda kerjakan untuk mengasah kemampuan!",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w500,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[100],
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      child: const Icon(
+                        Icons.info_outline,
+                        color: Colors.blue,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Selamat Datang!",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Pilih kategori soal sesuai kemampuan untuk mengasah pemahaman materi sejarah Indonesia masa Jepang",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.blue[700],
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              // Statistics Card
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(
+                          Icons.analytics_outlined,
+                          color: Colors.purple,
+                          size: 24,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "Statistik Soal",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatItem(
+                            'Total Soal',
+                            '${QuizData.allQuestions.length}',
+                            Icons.quiz,
+                            Colors.blue,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildStatItem(
+                            'Total Bab',
+                            '${QuizData.getChapterDistribution().length}',
+                            Icons.menu_book,
+                            Colors.green,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildStatItem(
+                            'Tingkat',
+                            '4 Level',
+                            Icons.trending_up,
+                            Colors.orange,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              const Row(
+                children: [
+                  Icon(Icons.school, color: Colors.purple, size: 24),
+                  SizedBox(width: 8),
+                  Text(
+                    "Pilih Kategori Soal",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              "Kategori Soal",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 500, // maksimal lebar card
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 0,
-                  childAspectRatio: 3, // lebih fleksibel
-                ),
+
+              const SizedBox(height: 20),
+
+              // Quiz Categories
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: quizCategories.length,
                 itemBuilder: (context, index) {
                   final category = quizCategories[index];
-                  return _buildQuizCard(category);
+                  return TweenAnimationBuilder<double>(
+                    tween: Tween<double>(begin: 0.0, end: 1.0),
+                    duration: Duration(milliseconds: 600 + (index * 200)),
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(0, 50 * (1 - value)),
+                        child: Opacity(
+                          opacity: value,
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            child: _buildQuizCard(category, index),
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
-            ),
-          ],
+
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildQuizCard(Map<String, dynamic> category) {
+  Widget _buildQuizCard(Map<String, dynamic> category, int index) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -204,24 +343,21 @@ class _SoalScreenState extends State<SoalScreen> {
                     Text(
                       category['description'],
                       style: const TextStyle(fontSize: 13, color: Colors.grey),
-                      maxLines: 2, // batasi jadi 2 baris
-                      overflow:
-                          TextOverflow
-                              .ellipsis, // kalau terlalu panjang, jadi "..."
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         _buildInfoChip(
                           Icons.quiz,
-                          '${category['questionCount']} Soal',
+                          "${category['questionCount']} soal",
                           category['color'],
                         ),
                         const SizedBox(width: 8),
                         _buildInfoChip(
                           Icons.schedule,
-                          category['duration'],
+                          "${category['duration']} menit",
                           category['color'],
                         ),
                       ],
@@ -277,17 +413,81 @@ class _SoalScreenState extends State<SoalScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Memulai ${category['title']}"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: category['color'].withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  category['icon'],
+                  color: category['color'],
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  "Memulai ${category['title']}",
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
           content: SingleChildScrollView(
-            child: ListBody(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Jumlah Soal: ${category['questionCount']}"),
-                Text("Durasi: ${category['duration']}"),
-                Text("Tingkat: ${category['difficulty']}"),
+                _buildDialogInfo(
+                  "Jumlah Soal",
+                  "${category['questionCount']} pertanyaan",
+                  Icons.quiz,
+                ),
+                const SizedBox(height: 12),
+                _buildDialogInfo(
+                  "Durasi",
+                  "${category['duration']} menit",
+                  Icons.schedule,
+                ),
+                const SizedBox(height: 12),
+                _buildDialogInfo(
+                  "Tingkat",
+                  category['difficulty'],
+                  Icons.trending_up,
+                ),
                 const SizedBox(height: 16),
-                const Text(
-                  "Pastikan koneksi internet stabil dan siapkan waktu yang cukup.",
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.amber[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.amber[200]!),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.amber[700],
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          "Pastikan koneksi internet stabil dan siapkan waktu yang cukup.",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.amber[700],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -295,28 +495,86 @@ class _SoalScreenState extends State<SoalScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Batal"),
+              child: Text("Batal", style: TextStyle(color: Colors.grey[600])),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-                // Implement quiz start logic here
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Memulai ${category['title']}..."),
-                    backgroundColor: category['color'],
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => QuizScreen(
+                          category: category['title'],
+                          difficulty: category['difficulty'],
+                          questionCount: category['questionCount'],
+                          duration: category['duration'],
+                          chapters: category['chapters'], // Tambahkan ini
+                          source: category['source'], // Tambahkan ini
+                        ),
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: category['color'],
                 foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
-              child: const Text("Mulai"),
+              child: const Text(
+                "Mulai",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildDialogInfo(String label, String value, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey[600]),
+        const SizedBox(width: 8),
+        Text(
+          "$label: ",
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+        Expanded(child: Text(value, style: const TextStyle(fontSize: 14))),
+      ],
+    );
+  }
+
+  Widget _buildStatItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: color, size: 24),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
     );
   }
 }

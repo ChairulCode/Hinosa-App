@@ -14,73 +14,447 @@ class _GlosariumScreenState extends State<GlosariumScreen> {
 
   final List<String> categories = [
     'Semua',
-    'Teknologi',
-    'Pemrograman',
-    'Database',
-    'Networking',
-    'UI/UX',
+    'Pendudukan Jepang',
+    'Organisasi',
+    'Militer Jepang',
+    'Tokoh Nasional',
+    'Lainnya',
   ];
 
   final List<Map<String, String>> glosariumData = [
     {
-      'term': 'API',
+      'term': 'Asia Raya',
       'definition':
-          'Application Programming Interface - sekumpulan protokol, rutinitas, dan alat untuk membangun aplikasi software.',
-      'category': 'Teknologi',
+          'Konsep propaganda Jepang untuk menyatukan bangsa Asia di bawah pimpinan Jepang.',
+      'category': 'Pendudukan Jepang',
     },
     {
-      'term': 'Flutter',
+      'term': 'Barisan Pelopor',
       'definition':
-          'Framework UI toolkit dari Google untuk membangun aplikasi natively compiled untuk mobile, web, dan desktop dari satu codebase.',
-      'category': 'Pemrograman',
+          'Organisasi semi-militer yang dibentuk pada tahun 1944 di bawah naungan Jawa Hokokai.',
+      'category': 'Organisasi',
     },
     {
-      'term': 'Widget',
+      'term': 'Barisan Propaganda Asia Raya',
       'definition':
-          'Komponen dasar pembangun UI dalam Flutter. Segala sesuatu dalam Flutter adalah widget.',
-      'category': 'Pemrograman',
+          'Organisasi yang dibentuk Jepang untuk menyebarkan propaganda tentang "Kemakmuran Bersama Asia Timur Raya".',
+      'category': 'Organisasi',
     },
     {
-      'term': 'Database',
+      'term': 'Beppan',
       'definition':
-          'Kumpulan data yang terorganisir dan tersimpan secara sistematis untuk memudahkan pencarian dan pengelolaan.',
-      'category': 'Database',
+          'Kantor Rahasia (Bagian Intelijen). Lembaga rahasia bentukan pemerintahan militer Jepang di Indonesia yang menangani urusan intelijen, penyelidikan, dan pengawasan politik.',
+      'category': 'Pendudukan Jepang',
     },
     {
-      'term': 'HTTP',
+      'term': 'Boei Engokai',
       'definition':
-          'HyperText Transfer Protocol - protokol komunikasi yang digunakan untuk sistem informasi hypermedia terdistribusi.',
-      'category': 'Networking',
+          'Organisasi yang membantu prajurit PETA dan Heiho, terutama dalam urusan sosial-ekonomi.',
+      'category': 'Organisasi',
     },
     {
-      'term': 'UI',
+      'term': 'Budancho',
       'definition':
-          'User Interface - antarmuka pengguna yang memungkinkan interaksi antara manusia dan komputer.',
-      'category': 'UI/UX',
+          'Komandan regu. Pangkat terendah dalam struktur kepemimpinan militer PETA (Pembela Tanah Air).',
+      'category': 'Militer Jepang',
     },
     {
-      'term': 'UX',
+      'term': 'BPUPKI',
       'definition':
-          'User Experience - keseluruhan pengalaman pengguna ketika berinteraksi dengan produk atau layanan.',
-      'category': 'UI/UX',
+          'Badan Penyelidik Usaha-usaha Persiapan Kemerdekaan Indonesia. Dibentuk oleh Jepang tahun 1945 untuk merancang dasar negara dan konstitusi Indonesia.',
+      'category': 'Organisasi',
     },
     {
-      'term': 'JSON',
+      'term': 'Bogodan',
       'definition':
-          'JavaScript Object Notation - format pertukaran data ringan yang mudah dibaca dan ditulis.',
-      'category': 'Teknologi',
+          'Barisan Pertahanan Desa. Organisasi semi-militer bentukan Jepang yang beranggotakan rakyat desa.',
+      'category': 'Organisasi',
     },
     {
-      'term': 'SQL',
+      'term': 'Chuo Sangi In',
       'definition':
-          'Structured Query Language - bahasa pemrograman untuk mengelola dan mengakses database relasional.',
-      'category': 'Database',
+          'Dewan pertimbangan pusat. Badan penasihat yang dibentuk Jepang pada tahun 1943 untuk menarik simpati tokoh bangsa Indonesia.',
+      'category': 'Organisasi',
     },
     {
-      'term': 'Git',
+      'term': 'Chōkan (Gunseikan)',
+      'definition': 'Kepala pemerintahan militer Jepang di Indonesia.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Cudancho (Chudanco)',
       'definition':
-          'Sistem kontrol versi terdistribusi untuk melacak perubahan dalam source code selama pengembangan software.',
-      'category': 'Teknologi',
+          'Komandan Kompi. Salah satu tingkat kepemimpinan dalam organisasi militer PETA.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Cuo Seinen Kunrensyo',
+      'definition':
+          'Pusat Latihan Pemuda. Lembaga pelatihan kepemudaan yang didirikan Jepang di tingkat pusat maupun daerah.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Daidan',
+      'definition':
+          'Satuan militer Jepang berisi pemuda Indonesia untuk latihan militer.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Daidancho',
+      'definition':
+          'Komandan Batalyon. Pangkat tertinggi dalam organisasi militer bentukan Jepang di Indonesia, terutama PETA.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Dai Nippon',
+      'definition': 'Kekaisaran Jepang Raya.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Dōmei Tsūshinsha',
+      'definition': 'Kantor berita Jepang yang beroperasi di Indonesia.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Dokuritsu Junbi Cosokai',
+      'definition':
+          'Badan Penyelidik Usaha-usaha Persiapan Kemerdekaan Indonesia (BPUPKI). Dibentuk pada 1 Maret 1945.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Dokuritsu Junbi Inkai',
+      'definition':
+          'Panitia Persiapan Kemerdekaan Indonesia (PPKI). Dibentuk 7 Agustus 1945 sebagai kelanjutan dari BPUPKI.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Empat Serangkai',
+      'definition':
+          'Soekarno, Moh. Hatta, Ki Hadjar Dewantara, dan K.H. Mas Mansur, tokoh nasionalis simbol kerja sama dengan Jepang.',
+      'category': 'Tokoh Nasional',
+    },
+    {
+      'term': 'Fujinkai',
+      'definition':
+          'Perhimpunan Wanita. Organisasi wanita bentukan Jepang untuk perempuan usia 15 tahun ke atas.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Gakutotai',
+      'definition':
+          'Barisan Siswa. Organisasi bentukan Jepang yang mewajibkan siswa sekolah menengah ikut kegiatan semi-militer.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'GAPI',
+      'definition':
+          'Gabungan Politik Indonesia. Gabungan organisasi politik nasionalis (1939) yang menuntut Indonesia berparlemen.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Gerakan Tiga A',
+      'definition': 'Propaganda awal Jepang (1942).',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Giyūgun',
+      'definition': 'Pasukan sukarela di daerah pendudukan Jepang.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Giyuhei',
+      'definition':
+          'Tentara Sukarela. Pasukan sukarela dari kalangan rakyat Indonesia untuk membantu kepentingan perang Jepang.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Gunsei',
+      'definition':
+          'Administrasi militer Jepang yang dijalankan di Indonesia selama pendudukan.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Gunseikan',
+      'definition':
+          'Kepala pemerintahan militer Jepang di wilayah pendudukan dengan wewenang penuh.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Gunseikanbu',
+      'definition': 'Pemerintahan militer Jepang di Jawa.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Hakko Ichiu',
+      'definition':
+          'Semboyan Jepang yang berarti “Dunia di bawah satu atap”. Ideologi propaganda Jepang.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Heiho',
+      'definition':
+          'Prajurit pembantu ketentaraan Jepang dari kalangan pemuda Indonesia.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Hinomaru',
+      'definition': 'Bendera Jepang dengan lingkaran merah di tengah.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Hizbullah',
+      'definition':
+          'Tentara Allah. Organisasi militer Islam bentukan Jepang tahun 1944 di bawah koordinasi Masyumi.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Jawa Hokokai',
+      'definition': 'Asosiasi Kebaktian Jawa (1944).',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Jibakutai',
+      'definition':
+          'Pasukan berani mati. Kesatuan khusus yang dibentuk Jepang tahun 1945 dari pemuda Indonesia.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Josyi Seinendan',
+      'definition':
+          'Barisan Pemuda Putri. Organisasi semi-militer bentukan Jepang untuk gadis usia 14–25 tahun.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Jugun ianfu',
+      'definition':
+          'Perempuan yang dipaksa oleh militer Jepang untuk menjadi budak seks bagi tentara Jepang pada masa Perang Dunia II.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Kaigun',
+      'definition': 'Angkatan Laut Jepang yang menduduki wilayah Indonesia.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Keimubu',
+      'definition':
+          'Departemen Dalam Negeri (Bagian Keamanan). Mengurus masalah keamanan dan pengawasan politik masyarakat.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Kayo Keibotai',
+      'definition':
+          'Organisasi bentukan Jepang beranggotakan pemuda Indonesia untuk membantu tugas polisi Jepang.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Keibōdan',
+      'definition': 'Barisan pembantu polisi bentukan Jepang.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Keibōtai',
+      'definition': 'Satuan polisi lokal bentukan Jepang.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Keimin Bunka Shidosho',
+      'definition':
+          'Lembaga kebudayaan yang dibentuk Jepang di Jakarta tahun 1943.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Kempeitai',
+      'definition': 'Polisi militer Jepang yang terkenal keras.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Keisatsubu',
+      'definition': 'Departemen Kepolisian Jepang di Indonesia.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Kinrō Hōshi',
+      'definition': 'Kerja bakti wajib untuk rakyat.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Koa Kunrenjo',
+      'definition': 'Lembaga pendidikan Jepang untuk melatih calon pemimpin.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Kumiai',
+      'definition':
+          'Perhimpunan/Koperasi ekonomi bentukan Jepang di pedesaan yang mewajibkan petani bergabung.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Kuōmintō',
+      'definition':
+          'Partai politik Tiongkok, disebut dalam konteks Perang Asia Timur Raya.',
+      'category': 'Lainnya',
+    },
+    {
+      'term': 'Masyumi',
+      'definition':
+          'Organisasi politik Islam dibentuk Jepang 24 Oktober 1943 sebagai wadah persatuan umat Islam menggantikan MIAI.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'MIAI',
+      'definition':
+          'Majelis Islam A’la Indonesia. Organisasi gabungan Islam didirikan 1937, dibubarkan Jepang tahun 1943.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Minseifu',
+      'definition':
+          'Pemerintahan sipil yang dibentuk Jepang di Indonesia pada masa pendudukan.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Mohammad Hatta',
+      'definition': 'Pemimpin pergerakan nasional, proklamator RI.',
+      'category': 'Tokoh Nasional',
+    },
+    {
+      'term': 'Naimubu Bunkyoku',
+      'definition':
+          'Kantor Departemen Pendidikan bentukan pemerintahan militer Jepang di Indonesia.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Nippon Seishin/Nipponisasi',
+      'definition':
+          'Semangat Jepang yang ditanamkan lewat pendidikan dan propaganda.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Osamu Seirei',
+      'definition':
+          'Undang-undang/peraturan yang dikeluarkan pemerintahan militer Jepang di Indonesia.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'PETA',
+      'definition':
+          'Pembela Tanah Air. Tentara sukarela bentukan Jepang (1943).',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Petisi Soetardjo',
+      'definition':
+          'Permintaan tahun 1938 agar diadakan konferensi Indonesia-Belanda tentang pemerintahan sendiri. Ditolak Belanda.',
+      'category': 'Lainnya',
+    },
+    {
+      'term': 'Pendudukan Jepang',
+      'definition':
+          'Masa ketika Jepang menguasai Indonesia setelah Belanda menyerah (1942–1945).',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Propaganda Jepang',
+      'definition': 'Upaya membangun citra Jepang sebagai “Saudara Tua”.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'PUTERA',
+      'definition':
+          'Pusat Tenaga Rakyat. Organisasi massa bentukan Jepang (1943).',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Rikugun',
+      'definition':
+          'Angkatan Darat Jepang yang menduduki sebagian besar wilayah Indonesia.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Romusha',
+      'definition': 'Sistem kerja paksa oleh Jepang.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Romukyokai',
+      'definition':
+          'Organisasi untuk merekrut dan mengawasi tenaga kerja romusha demi kepentingan Jepang.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Saiko Shikikan',
+      'definition': 'Panglima tertinggi militer Jepang di Asia Tenggara.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'San A Seinen Kunrensho',
+      'definition':
+          'Pusat Latihan Pemuda Tiga A. Lembaga pendidikan kepemudaan bentukan Jepang.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Seinendan',
+      'definition': 'Barisan pemuda usia 14–22 tahun bentukan Jepang.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Seinen Kurabu',
+      'definition': 'Perkumpulan pemuda bentukan Jepang.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Seikerei',
+      'definition': 'Membungkuk ke arah Tokyo sebagai penghormatan.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Sendenbu',
+      'definition': 'Bagian Gunseikanbu yang khusus menangani propaganda.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Shintaisei',
+      'definition': 'Tatanan Baru Asia Timur Raya, ideologi Jepang.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Shodancho',
+      'definition': 'Komandan Peleton dalam organisasi militer PETA.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Shūchikan',
+      'definition': 'Pusat pendidikan dan pelatihan militer Jepang.',
+      'category': 'Militer Jepang',
+    },
+    {
+      'term': 'Syucokan',
+      'definition':
+          'Kepala Pemerintahan Karesidenan (Residen) pada masa pendudukan Jepang.',
+      'category': 'Pendudukan Jepang',
+    },
+    {
+      'term': 'Syu Sangikai',
+      'definition':
+          'Dewan Pertimbangan di tingkat daerah (syu) yang melibatkan tokoh lokal.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Togyo Rengokai',
+      'definition':
+          'Gabungan perusahaan gula yang dibentuk pemerintah pendudukan Jepang di Indonesia.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Tonarigumi',
+      'definition': 'Organisasi rukun tetangga buatan Jepang.',
+      'category': 'Organisasi',
+    },
+    {
+      'term': 'Wakaba',
+      'definition': 'Sekolah kepandaian putri zaman Jepang.',
+      'category': 'Organisasi',
     },
   ];
 
@@ -108,7 +482,7 @@ class _GlosariumScreenState extends State<GlosariumScreen> {
           centerTitle: true,
           elevation: 0,
           title: const Text(
-            "Glosarium",
+            "Glosarium Pendudukan Jepang",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -403,16 +777,16 @@ class _GlosariumScreenState extends State<GlosariumScreen> {
 
   Color _getCategoryColor(String category) {
     switch (category) {
-      case 'Teknologi':
+      case 'Pendudukan Jepang':
         return Colors.blue;
-      case 'Pemrograman':
+      case 'Organisasi':
         return Colors.green;
-      case 'Database':
+      case 'Militer Jepang':
+        return Colors.red;
+      case 'Tokoh Nasional':
         return Colors.orange;
-      case 'Networking':
+      case 'Lainnya':
         return Colors.purple;
-      case 'UI/UX':
-        return Colors.pink;
       default:
         return Colors.grey;
     }

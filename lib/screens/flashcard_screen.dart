@@ -15,31 +15,162 @@ class _FlashCardScreenState extends State<FlashCardScreen>
   int _currentIndex = 0;
 
   final List<Map<String, String>> flashCards = [
+    // Bagian Pertama - Serangan dan Invasi
     {
-      'front': 'Apa itu Flutter?',
-      'back':
-          'Flutter adalah framework UI toolkit dari Google untuk membangun aplikasi mobile, web, dan desktop dari satu codebase.',
+      'front': 'Kapan Jepang menyerang Pearl Harbor?',
+      'back': '7 Desember 1941',
     },
     {
-      'front': 'Apa itu Widget dalam Flutter?',
-      'back':
-          'Widget adalah building block dasar dalam Flutter. Segala sesuatu dalam Flutter adalah widget, termasuk layout, text, button, dll.',
+      'front': 'Siapa pemimpin serangan Pearl Harbor?',
+      'back': 'Laksamana Noichi Nagumo atas perintah Yamamoto',
     },
     {
-      'front': 'Apa perbedaan StatelessWidget dan StatefulWidget?',
+      'front': 'Apa tujuan serangan Pearl Harbor?',
       'back':
-          'StatelessWidget tidak dapat berubah setelah dibuat, sedangkan StatefulWidget dapat berubah-ubah sesuai state internal.',
+          'Menghancurkan Armada Pasifik AS agar leluasa menguasai Asia Tenggara',
+    },
+    {'front': 'Kapan Jepang mendarat di Tarakan?', 'back': '11 Januari 1942'},
+    {
+      'front': 'Kota minyak yang jatuh setelah Tarakan?',
+      'back': 'Balikpapan (24 Januari 1942)',
     },
     {
-      'front': 'Apa itu Hot Reload?',
-      'back':
-          'Hot Reload adalah fitur Flutter yang memungkinkan developer melihat perubahan kode secara real-time tanpa restart aplikasi.',
+      'front': 'Pertempuran laut penting sebelum jatuhnya Jawa?',
+      'back': 'Pertempuran Laut Jawa (27 Februari 1942) dipimpin Karel Doorman',
     },
     {
-      'front': 'Apa itu Dart?',
-      'back':
-          'Dart adalah bahasa pemrograman yang dikembangkan Google dan digunakan untuk membangun aplikasi Flutter.',
+      'front': 'Kapan Belanda menyerah tanpa syarat pada Jepang?',
+      'back': '8 Maret 1942 di Kalijati',
     },
+
+    // Bagian Kedua - Sistem Pemerintahan
+    {
+      'front': 'Apa nama aturan dasar pemerintahan sementara Jepang?',
+      'back': 'Osamu Seirei (7 Maret 1942)',
+    },
+    {
+      'front': 'Siapa panglima pertama Tentara ke-16 di Jawa?',
+      'back': 'Letnan Jenderal Hitoshi Imamura',
+    },
+    {
+      'front': 'Apa fungsi Gunseikan?',
+      'back': 'Kepala pemerintahan militer Jepang di Jawa',
+    },
+    {
+      'front': 'Departemen apa saja di bawah Gunseikanbu?',
+      'back':
+          'Somubu (Umum), Zaimubu (Keuangan), Sangyobu (Industri), Kotsubu (Lalu lintas), Shihobu (Kehakiman)',
+    },
+    {
+      'front': 'Kota istimewa (koci) pada masa Jepang?',
+      'back': 'Surakarta dan Yogyakarta',
+    },
+    {
+      'front': 'Siapa residen Indonesia pertama yang diangkat Jepang?',
+      'back': 'R.A.A. Wiranatakusumah (Priangan)',
+    },
+    {
+      'front': 'Lagu kebangsaan yang wajib dipakai masa Jepang?',
+      'back': 'Kimigayo (Jepang)',
+    },
+
+    // Bagian Ketiga - Struktur Administratif
+    {
+      'front': 'Undang-Undang No. 27 tahun 1942 mengatur apa?',
+      'back': 'Perubahan tata pemerintahan daerah di Jawa-Madura',
+    },
+    {'front': 'Apa arti Syu?', 'back': 'Setara keresidenan, dipimpin Syucokan'},
+    {
+      'front': 'Apa arti Syi, Ken, Gun, Son, Ku?',
+      'back':
+          'Syi = kotapraja, Ken = kabupaten, Gun = kewedanan, Son = kecamatan, Ku = desa',
+    },
+    {
+      'front': 'Berapa jumlah syu di Jawa?',
+      'back': '17 syu (contoh: Batavia, Priangan, Surabaya)',
+    },
+    {
+      'front': 'Apa fungsi Cokan Kanbo?',
+      'back':
+          'Majelis penasehat syucokan, terdiri atas 3 bu: Naiseibu, Keizaibu, Keisatsubu',
+    },
+    {
+      'front': 'Apa itu Tokubetsu Syi?',
+      'back': 'Kotapraja istimewa, contohnya Batavia',
+    },
+    {
+      'front': 'Apa badan pertimbangan pusat Jepang di Indonesia?',
+      'back': 'Chuo Sangi In (dibentuk 1943)',
+    },
+
+    // Bagian Keempat - Sikap Tokoh Nasional
+    {
+      'front': 'Tokoh nasional yang bekerja sama dengan Jepang?',
+      'back': 'Soekarno, Hatta, Ki Hajar Dewantara, K.H. Mas Mansur',
+    },
+    {
+      'front': 'Tokoh yang menolak kerja sama dengan Jepang?',
+      'back': 'Sutan Sjahrir, Dr. Tjipto Mangunkusumo',
+    },
+    {
+      'front': 'Apa alasan Soekarno-Hatta bekerja sama?',
+      'back': 'Memanfaatkan Jepang demi cita-cita kemerdekaan',
+    },
+    {
+      'front': 'Apa sikap Sjahrir terhadap Jepang?',
+      'back': 'Nonkooperatif, membangun jaringan bawah tanah',
+    },
+    {
+      'front': 'Apa sikap Dr. Tjipto terhadap Jepang?',
+      'back': 'Anti-Jepang, mengimbau rakyat tetap mendukung Belanda sementara',
+    },
+    {
+      'front': 'Mengapa rakyat awalnya simpati kepada Jepang?',
+      'back': 'Karena ramalan Joyoboyo dan kebijakan Belanda yang keras kepala',
+    },
+
+    // Bagian Kelima - Organisasi Propaganda
+    {
+      'front': 'Organisasi propaganda pertama Jepang?',
+      'back': 'Gerakan Tiga A (1942)',
+    },
+    {'front': 'Siapa tokoh utama Gerakan Tiga A?', 'back': 'Mr. Samsudin'},
+    {
+      'front': 'Organisasi pengganti Tiga A?',
+      'back': 'Poetera (Poesat Tenaga Rakjat)',
+    },
+    {
+      'front': 'Siapa pimpinan Poetera?',
+      'back':
+          'Empat Serangkai: Soekarno, Hatta, Ki Hajar Dewantara, K.H. Mas Mansur',
+    },
+    {'front': 'Organisasi pengganti Poetera?', 'back': 'Jawa Hokokai (1944)'},
+    {
+      'front': 'Apa dasar semangat Jawa Hokokai?',
+      'back': 'Hoko Seishin: pengorbanan diri, persaudaraan, kerja nyata',
+    },
+    {'front': 'Apa organisasi perempuan di bawah Jepang?', 'back': 'Fujinkai'},
+
+    // Bagian Keenam - Persiapan Kemerdekaan
+    {
+      'front': 'Siapa yang mengumumkan janji kemerdekaan?',
+      'back': 'PM Koiso (7 September 1944)',
+    },
+    {
+      'front': 'Apa kepanjangan BPUPKI?',
+      'back': 'Badan Penyelidik Usaha Persiapan Kemerdekaan Indonesia',
+    },
+    {'front': 'Kapan BPUPKI dibentuk?', 'back': '1 Maret 1945'},
+    {'front': 'Siapa ketua BPUPKI?', 'back': 'Dr. Radjiman Wedyodiningrat'},
+    {
+      'front': 'Apa fungsi BPUPKI?',
+      'back': 'Menyelidiki dasar-dasar bagi kemerdekaan Indonesia',
+    },
+    {
+      'front': 'Apa organisasi pengganti BPUPKI?',
+      'back': 'PPKI (Panitia Persiapan Kemerdekaan Indonesia)',
+    },
+    {'front': 'Kapan PPKI dibentuk?', 'back': '28 Juli 1945'},
   ];
 
   @override
@@ -108,7 +239,7 @@ class _FlashCardScreenState extends State<FlashCardScreen>
           centerTitle: true,
           elevation: 0,
           title: const Text(
-            "Flash Cards",
+            "Flash Cards Sejarah",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -122,7 +253,7 @@ class _FlashCardScreenState extends State<FlashCardScreen>
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.purple, Color(0xFF9C27B0)],
+                colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -158,12 +289,15 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Colors.purple,
+                          color: Color(0xFF6366F1),
                         ),
                       ),
                       IconButton(
                         onPressed: _resetCards,
-                        icon: const Icon(Icons.refresh, color: Colors.purple),
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Color(0xFF6366F1),
+                        ),
                         tooltip: "Reset ke awal",
                       ),
                     ],
@@ -171,9 +305,9 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                   const SizedBox(height: 8),
                   LinearProgressIndicator(
                     value: (_currentIndex + 1) / flashCards.length,
-                    backgroundColor: Colors.purple[100],
+                    backgroundColor: const Color(0xFF6366F1).withOpacity(0.2),
                     valueColor: const AlwaysStoppedAnimation<Color>(
-                      Colors.purple,
+                      Color(0xFF6366F1),
                     ),
                   ),
                 ],
@@ -211,10 +345,19 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                             gradient: LinearGradient(
                               colors:
                                   isShowingFront
-                                      ? [Colors.purple[50]!, Colors.white]
+                                      ? [
+                                        const Color(
+                                          0xFF6366F1,
+                                        ).withOpacity(0.1),
+                                        Colors.white,
+                                      ]
                                       : [
-                                        Colors.purple[100]!,
-                                        Colors.purple[50]!,
+                                        const Color(
+                                          0xFF8B5CF6,
+                                        ).withOpacity(0.2),
+                                        const Color(
+                                          0xFF6366F1,
+                                        ).withOpacity(0.1),
                                       ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -227,9 +370,9 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                               children: [
                                 Icon(
                                   isShowingFront
-                                      ? Icons.help_outline
+                                      ? Icons.quiz
                                       : Icons.lightbulb_outline,
-                                  color: Colors.purple,
+                                  color: const Color(0xFF6366F1),
                                   size: 40,
                                 ),
                                 const SizedBox(height: 20),
@@ -275,7 +418,6 @@ class _FlashCardScreenState extends State<FlashCardScreen>
             ),
 
             // Navigation buttons
-            // Navigation buttons
             Container(
               margin: const EdgeInsets.only(top: 20),
               child: Row(
@@ -289,20 +431,18 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                        ), // jangan horizontal
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       icon: const Icon(Icons.arrow_back, size: 20),
                       label: const Text("Sebelumnya"),
                     ),
                   ),
-                  const SizedBox(width: 8), // jarak antar tombol
+                  const SizedBox(width: 8),
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _flipCard,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple,
+                        backgroundColor: const Color(0xFF6366F1),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
@@ -321,7 +461,7 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                               ? _nextCard
                               : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purple[700],
+                        backgroundColor: const Color(0xFF8B5CF6),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
@@ -341,9 +481,11 @@ class _FlashCardScreenState extends State<FlashCardScreen>
               margin: const EdgeInsets.only(top: 16),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.purple[50],
+                color: const Color(0xFF6366F1).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.purple[200]!),
+                border: Border.all(
+                  color: const Color(0xFF6366F1).withOpacity(0.3),
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -353,13 +495,21 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                     "${flashCards.length}",
                     Icons.credit_card,
                   ),
-                  Container(height: 30, width: 1, color: Colors.purple[200]),
+                  Container(
+                    height: 30,
+                    width: 1,
+                    color: const Color(0xFF6366F1).withOpacity(0.3),
+                  ),
                   _buildStatItem(
                     "Dipelajari",
                     "${_currentIndex + 1}",
                     Icons.done,
                   ),
-                  Container(height: 30, width: 1, color: Colors.purple[200]),
+                  Container(
+                    height: 30,
+                    width: 1,
+                    color: const Color(0xFF6366F1).withOpacity(0.3),
+                  ),
                   _buildStatItem(
                     "Tersisa",
                     "${flashCards.length - _currentIndex - 1}",
@@ -377,14 +527,14 @@ class _FlashCardScreenState extends State<FlashCardScreen>
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: Colors.purple, size: 20),
+        Icon(icon, color: const Color(0xFF6366F1), size: 20),
         const SizedBox(height: 4),
         Text(
           value,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Colors.purple,
+            color: Color(0xFF6366F1),
           ),
         ),
         Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
