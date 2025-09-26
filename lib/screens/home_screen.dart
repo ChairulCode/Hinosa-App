@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/service/auth_service.dart';
-import 'package:hinosaapp/screens/login_screen.dart';
 import 'package:hinosaapp/screens/profile_screen.dart';
 import 'package:hinosaapp/screens/materi_screen.dart';
 import 'package:hinosaapp/screens/soal_screen.dart';
@@ -28,16 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _initUser() async {
-    if (!auth.isLoggedIn) {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
-        );
-      }
-      return;
-    }
-
     final name = await auth.getFullName();
     final email = await auth.getEmail();
     debugPrint("✅ Fullname loaded in HomeScreen: $name");
@@ -211,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
         margin: const EdgeInsets.only(bottom: 18),
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
         decoration: BoxDecoration(
-          color: const Color(0xFFFCEFEA), // cream background
+          color: const Color(0xFFFCEFEA),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: const Color(0xFFBB002C), width: 1.5),
         ),

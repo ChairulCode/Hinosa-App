@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hinosaapp/service/auth_service.dart';
-import 'package:hinosaapp/screens/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String fullName;
@@ -13,43 +12,6 @@ class ProfileScreen extends StatelessWidget {
     required this.email,
     required this.auth,
   });
-
-  Future<void> _logout(BuildContext context) async {
-    final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Konfirmasi Logout"),
-          content: const Text("Apakah Anda yakin ingin logout?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text("Tidak"),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text("Ya"),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (shouldLogout == true && context.mounted) {
-      await auth.signOut();
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
-          (route) => false,
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +122,7 @@ class ProfileScreen extends StatelessWidget {
               width: double.infinity,
               height: 55,
               child: ElevatedButton.icon(
-                onPressed: () => _logout(context),
+                onPressed: () => Text('logout pressed'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFBB002C),
                   foregroundColor: Colors.white,
