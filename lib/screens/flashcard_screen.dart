@@ -15,6 +15,7 @@ class _FlashCardScreenState extends State<FlashCardScreen>
   int _currentIndex = 0;
 
   final List<Map<String, String>> flashCards = [
+    // Bagian Pertama - Serangan dan Invasi
     {
       'front': 'Kapan Jepang menyerang Pearl Harbor?',
       'back': '7 Desember 1941',
@@ -41,6 +42,8 @@ class _FlashCardScreenState extends State<FlashCardScreen>
       'front': 'Kapan Belanda menyerah tanpa syarat pada Jepang?',
       'back': '8 Maret 1942 di Kalijati',
     },
+
+    // Bagian Kedua - Sistem Pemerintahan
     {
       'front': 'Apa nama aturan dasar pemerintahan sementara Jepang?',
       'back': 'Osamu Seirei (7 Maret 1942)',
@@ -70,6 +73,8 @@ class _FlashCardScreenState extends State<FlashCardScreen>
       'front': 'Lagu kebangsaan yang wajib dipakai masa Jepang?',
       'back': 'Kimigayo (Jepang)',
     },
+
+    // Bagian Ketiga - Struktur Administratif
     {
       'front': 'Undang-Undang No. 27 tahun 1942 mengatur apa?',
       'back': 'Perubahan tata pemerintahan daerah di Jawa-Madura',
@@ -97,6 +102,8 @@ class _FlashCardScreenState extends State<FlashCardScreen>
       'front': 'Apa badan pertimbangan pusat Jepang di Indonesia?',
       'back': 'Chuo Sangi In (dibentuk 1943)',
     },
+
+    // Bagian Keempat - Sikap Tokoh Nasional
     {
       'front': 'Tokoh nasional yang bekerja sama dengan Jepang?',
       'back': 'Soekarno, Hatta, Ki Hajar Dewantara, K.H. Mas Mansur',
@@ -121,6 +128,8 @@ class _FlashCardScreenState extends State<FlashCardScreen>
       'front': 'Mengapa rakyat awalnya simpati kepada Jepang?',
       'back': 'Karena ramalan Joyoboyo dan kebijakan Belanda yang keras kepala',
     },
+
+    // Bagian Kelima - Organisasi Propaganda
     {
       'front': 'Organisasi propaganda pertama Jepang?',
       'back': 'Gerakan Tiga A (1942)',
@@ -141,6 +150,8 @@ class _FlashCardScreenState extends State<FlashCardScreen>
       'back': 'Hoko Seishin: pengorbanan diri, persaudaraan, kerja nyata',
     },
     {'front': 'Apa organisasi perempuan di bawah Jepang?', 'back': 'Fujinkai'},
+
+    // Bagian Keenam - Persiapan Kemerdekaan
     {
       'front': 'Siapa yang mengumumkan janji kemerdekaan?',
       'back': 'PM Koiso (7 September 1944)',
@@ -242,7 +253,10 @@ class _FlashCardScreenState extends State<FlashCardScreen>
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                colors: [
+                  Color.fromARGB(255, 218, 4, 11),
+                  Color.fromARGB(255, 180, 10, 16),
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -278,14 +292,14 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF6366F1),
+                          color: Color.fromARGB(255, 218, 4, 11),
                         ),
                       ),
                       IconButton(
                         onPressed: _resetCards,
                         icon: const Icon(
                           Icons.refresh,
-                          color: Color(0xFF6366F1),
+                          color: Color.fromARGB(255, 218, 4, 11),
                         ),
                         tooltip: "Reset ke awal",
                       ),
@@ -294,9 +308,14 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                   const SizedBox(height: 8),
                   LinearProgressIndicator(
                     value: (_currentIndex + 1) / flashCards.length,
-                    backgroundColor: const Color(0xFF6366F1).withOpacity(0.2),
+                    backgroundColor: const Color.fromARGB(
+                      255,
+                      218,
+                      4,
+                      11,
+                    ).withOpacity(0.2),
                     valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color(0xFF6366F1),
+                      Color.fromARGB(255, 218, 4, 11),
                     ),
                   ),
                 ],
@@ -312,14 +331,12 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                     animation: _flipAnimation,
                     builder: (context, child) {
                       final isShowingFront = _flipAnimation.value < 0.5;
-                      final rotationAngle = _flipAnimation.value * 3.14159;
-
                       return Transform(
                         alignment: Alignment.center,
                         transform:
                             Matrix4.identity()
                               ..setEntry(3, 2, 0.001)
-                              ..rotateY(rotationAngle),
+                              ..rotateY(_flipAnimation.value * 3.14159),
                         child: Container(
                           width: double.infinity,
                           height: 300,
@@ -337,42 +354,51 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                               colors:
                                   isShowingFront
                                       ? [
-                                        const Color(
-                                          0xFF6366F1,
+                                        const Color.fromARGB(
+                                          255,
+                                          218,
+                                          4,
+                                          11,
                                         ).withOpacity(0.1),
                                         Colors.white,
                                       ]
                                       : [
-                                        const Color(
-                                          0xFF8B5CF6,
+                                        const Color.fromARGB(
+                                          255,
+                                          180,
+                                          10,
+                                          16,
                                         ).withOpacity(0.2),
-                                        const Color(
-                                          0xFF6366F1,
+                                        const Color.fromARGB(
+                                          255,
+                                          218,
+                                          4,
+                                          11,
                                         ).withOpacity(0.1),
                                       ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                           ),
-                          child: Transform(
-                            alignment: Alignment.center,
-                            transform:
-                                Matrix4.identity()
-                                  ..rotateY(isShowingFront ? 0 : 3.14159),
-                            child: Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    isShowingFront
-                                        ? Icons.quiz
-                                        : Icons.lightbulb_outline,
-                                    color: const Color(0xFF6366F1),
-                                    size: 40,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Text(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  isShowingFront
+                                      ? Icons.quiz
+                                      : Icons.lightbulb_outline,
+                                  color: const Color.fromARGB(255, 218, 4, 11),
+                                  size: 40,
+                                ),
+                                const SizedBox(height: 20),
+                                Transform(
+                                  alignment: Alignment.center,
+                                  transform:
+                                      Matrix4.identity()
+                                        ..rotateY(isShowingFront ? 0 : 3.14159),
+                                  child: Text(
                                     isShowingFront
                                         ? flashCards[_currentIndex]['front']!
                                         : flashCards[_currentIndex]['back']!,
@@ -384,20 +410,20 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  const SizedBox(height: 20),
-                                  Text(
-                                    isShowingFront
-                                        ? "Ketuk untuk melihat jawaban"
-                                        : "Ketuk untuk melihat pertanyaan",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                    textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 20),
+                                Text(
+                                  isShowingFront
+                                      ? "Ketuk untuk melihat jawaban"
+                                      : "Ketuk untuk melihat pertanyaan",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                    fontStyle: FontStyle.italic,
                                   ),
-                                ],
-                              ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -424,11 +450,8 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      icon: const Icon(Icons.arrow_back, size: 18),
-                      label: const Text(
-                        "Sebelum",
-                        style: TextStyle(fontSize: 13),
-                      ),
+                      icon: const Icon(Icons.arrow_back, size: 20),
+                      label: const Text("Sebelumnya"),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -436,18 +459,15 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                     child: ElevatedButton.icon(
                       onPressed: _flipCard,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6366F1),
+                        backgroundColor: const Color.fromARGB(255, 218, 4, 11),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      icon: const Icon(Icons.flip, size: 18),
-                      label: const Text(
-                        "Balik",
-                        style: TextStyle(fontSize: 13),
-                      ),
+                      icon: const Icon(Icons.flip, size: 20),
+                      label: const Text("Balik"),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -458,18 +478,15 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                               ? _nextCard
                               : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF8B5CF6),
+                        backgroundColor: const Color.fromARGB(255, 180, 10, 16),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      icon: const Icon(Icons.arrow_forward, size: 18),
-                      label: const Text(
-                        "Lanjut",
-                        style: TextStyle(fontSize: 13),
-                      ),
+                      icon: const Icon(Icons.arrow_forward, size: 20),
+                      label: const Text("Selanjutnya"),
                     ),
                   ),
                 ],
@@ -481,10 +498,10 @@ class _FlashCardScreenState extends State<FlashCardScreen>
               margin: const EdgeInsets.only(top: 16),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF6366F1).withOpacity(0.1),
+                color: const Color.fromARGB(255, 218, 4, 11).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFF6366F1).withOpacity(0.3),
+                  color: const Color.fromARGB(255, 218, 4, 11).withOpacity(0.3),
                 ),
               ),
               child: Row(
@@ -498,7 +515,12 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                   Container(
                     height: 30,
                     width: 1,
-                    color: const Color(0xFF6366F1).withOpacity(0.3),
+                    color: const Color.fromARGB(
+                      255,
+                      218,
+                      4,
+                      11,
+                    ).withOpacity(0.3),
                   ),
                   _buildStatItem(
                     "Dipelajari",
@@ -508,7 +530,12 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                   Container(
                     height: 30,
                     width: 1,
-                    color: const Color(0xFF6366F1).withOpacity(0.3),
+                    color: const Color.fromARGB(
+                      255,
+                      218,
+                      4,
+                      11,
+                    ).withOpacity(0.3),
                   ),
                   _buildStatItem(
                     "Tersisa",
@@ -527,14 +554,14 @@ class _FlashCardScreenState extends State<FlashCardScreen>
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: const Color(0xFF6366F1), size: 20),
+        Icon(icon, color: const Color.fromARGB(255, 218, 4, 11), size: 20),
         const SizedBox(height: 4),
         Text(
           value,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF6366F1),
+            color: Color.fromARGB(255, 218, 4, 11),
           ),
         ),
         Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),

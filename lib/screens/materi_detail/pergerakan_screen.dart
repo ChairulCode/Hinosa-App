@@ -13,7 +13,7 @@ class PergerakanScreenDetail extends BaseMateriDetail {
 class _PergerakanScreenDetailState
     extends BaseMateriDetailState<PergerakanScreenDetail> {
   String materiTitle = "";
-  Color materiColor = Colors.greenAccent;
+  final Color materiColor = const Color.fromARGB(255, 218, 4, 11);
   List<Map<String, dynamic>> materiSections = [];
   bool isLoading = true;
 
@@ -31,7 +31,6 @@ class _PergerakanScreenDetailState
 
     setState(() {
       materiTitle = data["title"];
-      materiColor = _parseColor(data["color"]);
       materiSections =
           (data["sections"] as List).map((s) {
             return {
@@ -41,21 +40,6 @@ class _PergerakanScreenDetailState
           }).toList();
       isLoading = false;
     });
-  }
-
-  Color _parseColor(String colorName) {
-    switch (colorName.toLowerCase()) {
-      case "red":
-        return Colors.red;
-      case "green":
-        return Colors.green;
-      case "blue":
-        return Colors.blue;
-      case "yellow":
-        return Colors.yellow;
-      default:
-        return Colors.blueGrey;
-    }
   }
 
   @override

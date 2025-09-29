@@ -1,4 +1,3 @@
-// screens/soal_screen.dart
 import 'package:flutter/material.dart';
 import '../screens/model/quiz_data.dart';
 import 'quiz_screen.dart';
@@ -33,7 +32,7 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
       'title': 'Quiz Menengah',
       'description': 'Soal tingkat menengah untuk menguji pemahaman',
       'questionCount': 15,
-      'difficulty': 'Sulit', // Sesuaikan dengan getQuestionsByDifficulty
+      'difficulty': 'Sulit',
       'icon': Icons.psychology,
       'color': Colors.red,
       'duration': 25,
@@ -42,7 +41,7 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
         'Ekonomi Perang',
         'Pendidikan, Komunikasi Sosial, dan Budaya',
       ],
-      'source': 'intermediate', // Ubah dari 'quiz2' ke 'intermediate'
+      'source': 'intermediate',
     },
   ];
 
@@ -74,8 +73,14 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
         child: AppBar(
           centerTitle: true,
           elevation: 0,
+          backgroundColor: const Color.fromARGB(
+            255,
+            218,
+            4,
+            11,
+          ), // 🔴 warna solid
           title: const Text(
-            "Latihan Soal Sejarah",
+            "Latihan Soal ",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -86,21 +91,15 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(25),
-                bottomRight: Radius.circular(25),
-              ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(25),
+              bottomRight: Radius.circular(25),
             ),
           ),
         ),
       ),
+
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
@@ -108,7 +107,6 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Info Card
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -171,8 +169,6 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
               ),
 
               const SizedBox(height: 32),
-
-              // Statistics Card
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -213,7 +209,7 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
                         Expanded(
                           child: _buildStatItem(
                             'Total Soal',
-                            '${QuizData.allQuestions.length}',
+                            '25',
                             Icons.quiz,
                             Colors.blue,
                           ),
@@ -229,7 +225,7 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
                         Expanded(
                           child: _buildStatItem(
                             'Tingkat',
-                            '4 Level',
+                            '2 Level',
                             Icons.trending_up,
                             Colors.orange,
                           ),
@@ -259,7 +255,6 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
 
               const SizedBox(height: 20),
 
-              // Quiz Categories
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -508,8 +503,8 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
                           difficulty: category['difficulty'],
                           questionCount: category['questionCount'],
                           duration: category['duration'],
-                          chapters: category['chapters'], // Tambahkan ini
-                          source: category['source'], // Tambahkan ini
+                          chapters: category['chapters'],
+                          source: category['source'],
                         ),
                   ),
                 );

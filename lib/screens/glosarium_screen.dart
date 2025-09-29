@@ -495,11 +495,7 @@ class _GlosariumScreenState extends State<GlosariumScreen> {
           ),
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Color(0xFF2196F3)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: Color.fromARGB(255, 218, 4, 11),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
@@ -517,12 +513,10 @@ class _GlosariumScreenState extends State<GlosariumScreen> {
       ),
       body: Column(
         children: [
-          // Search and Filter Section
           Container(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // Search Bar
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -553,7 +547,6 @@ class _GlosariumScreenState extends State<GlosariumScreen> {
 
                 const SizedBox(height: 12),
 
-                // Category Filter
                 SizedBox(
                   height: 40,
                   child: ListView.builder(

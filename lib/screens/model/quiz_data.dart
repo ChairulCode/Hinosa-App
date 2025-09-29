@@ -305,7 +305,6 @@ class QuizData {
           'Sisi positif sistem pendidikan Jepang adalah menghapus diskriminasi pendidikan',
     ),
 
-    // Perlawanan Rakyat Terhadap Jepang - Advanced Level
     QuizQuestion2(
       id: 'F1',
       chapter: 'Perlawanan Rakyat Terhadap Jepang',
@@ -366,7 +365,6 @@ class QuizData {
           'Jumlah korban dalam perlawanan Singaparna sekitar 198 orang',
     ),
 
-    // Janji dan Persiapan Kemerdekaan - Advanced Level
     QuizQuestion2(
       id: 'G1',
       chapter: 'Janji dan Persiapan Kemerdekaan',
@@ -419,7 +417,6 @@ class QuizData {
       explanation: 'Panitia Sembilan menghasilkan Piagam Jakarta',
     ),
 
-    // Menjelang Proklamasi - Advanced Level
     QuizQuestion2(
       id: 'H1',
       chapter: 'Menjelang Proklamasi',

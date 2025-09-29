@@ -21,7 +21,7 @@ class _MateriScreenState extends State<MateriScreen> {
       'title': 'Susunan dan Perkembangan Pemerintahan Pendudukan Jepang',
       'subtitle': 'Materi 1',
       'icon': Icons.school,
-      'color': Colors.redAccent,
+      'color': Color(0xFFE53935),
       'progress': 0.0,
       'id': 'kedatangan_jepang',
       'widget': const KedatanganJepangDetail(),
@@ -128,7 +128,7 @@ class _MateriScreenState extends State<MateriScreen> {
           child: AppBar(
             centerTitle: true,
             elevation: 0,
-            backgroundColor: Colors.redAccent,
+            backgroundColor: Colors.red,
             title: const Text(
               "Materi Pembelajaran",
               style: TextStyle(
@@ -155,32 +155,12 @@ class _MateriScreenState extends State<MateriScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            const Center(
-              child: Text(
-                "Kependudukan Jepang di Indonesia",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: materiList.length,
-                itemBuilder: (context, index) {
-                  final materi = materiList[index];
-                  return _buildMateriCard(materi);
-                },
-              ),
-            ),
-          ],
+        child: ListView.builder(
+          itemCount: materiList.length,
+          itemBuilder: (context, index) {
+            final materi = materiList[index];
+            return _buildMateriCard(materi);
+          },
         ),
       ),
     );

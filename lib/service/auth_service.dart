@@ -59,13 +59,15 @@ class AuthService {
   }
 
   /// Sign out user
-  Future<void> signOut() async {
+  /// Sign out user
+  Future<bool> signOut() async {
     try {
       await supabase.auth.signOut();
       print('✅ User signed out successfully');
+      return true;
     } catch (e) {
       print('❌ Error signing out: $e');
-      throw e;
+      return false; // ⬅️ return false kalau error
     }
   }
 

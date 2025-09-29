@@ -1,4 +1,3 @@
-// admin_dashboard.dart
 import 'package:flutter/material.dart';
 
 class AdminScreen extends StatelessWidget {

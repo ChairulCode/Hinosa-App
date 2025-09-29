@@ -13,7 +13,7 @@ class MobilasiScreenDetail extends BaseMateriDetail {
 class _MobilasiScreenDetailState
     extends BaseMateriDetailState<MobilasiScreenDetail> {
   String materiTitle = "";
-  Color materiColor = Colors.orangeAccent;
+  final Color materiColor = const Color.fromARGB(255, 218, 4, 11);
   List<Map<String, dynamic>> materiSections = [];
   bool isLoading = true;
 
@@ -28,10 +28,8 @@ class _MobilasiScreenDetailState
       "assets/data/data_mobilasi.json",
     );
     final data = json.decode(response);
-
     setState(() {
       materiTitle = data["title"];
-      materiColor = _parseColor(data["color"]);
       materiSections =
           (data["sections"] as List).map((s) {
             return {
@@ -41,21 +39,6 @@ class _MobilasiScreenDetailState
           }).toList();
       isLoading = false;
     });
-  }
-
-  Color _parseColor(String colorName) {
-    switch (colorName.toLowerCase()) {
-      case "red":
-        return Colors.red;
-      case "green":
-        return Colors.green;
-      case "blue":
-        return Colors.blue;
-      case "yellow":
-        return Colors.yellow;
-      default:
-        return Colors.blueGrey;
-    }
   }
 
   @override

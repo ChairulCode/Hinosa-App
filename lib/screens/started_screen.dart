@@ -84,7 +84,6 @@ class _StartedScreenState extends State<StartedScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Icon Indonesia dengan lingkaran putih di background
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -98,15 +97,14 @@ class _StartedScreenState extends State<StartedScreen>
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.account_balance,
-                          size: 80,
+                        child: Image.asset(
+                          "assets/logo.png",
+                          width: 80,
+                          height: 80,
                           color: Colors.white,
                         ),
                       ),
                       const SizedBox(height: 30),
-
-                      // Judul Aplikasi
                       const Text(
                         'HINOSA APP',
                         style: TextStyle(
@@ -204,7 +202,6 @@ class OnboardingScreen1 extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Icon sejarah dengan background putih
                 Container(
                   padding: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
@@ -218,10 +215,11 @@ class OnboardingScreen1 extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.history_edu,
-                    size: 80,
-                    color: Color(0xFFBB002C),
+                  child: Image.asset(
+                    "assets/logo.png",
+                    width: 180,
+                    height: 180,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 const SizedBox(height: 40),
