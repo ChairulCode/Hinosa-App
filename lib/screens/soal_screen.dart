@@ -284,7 +284,6 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
                   );
                 },
               ),
-
               const SizedBox(height: 20),
             ],
           ),
