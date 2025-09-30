@@ -275,246 +275,251 @@ class _FlashCardScreenState extends State<FlashCardScreen>
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            // Progress indicator
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Kartu ${_currentIndex + 1} dari ${flashCards.length}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color.fromARGB(255, 218, 4, 11),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: _resetCards,
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Color.fromARGB(255, 218, 4, 11),
-                        ),
-                        tooltip: "Reset ke awal",
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: (_currentIndex + 1) / flashCards.length,
-                    backgroundColor: const Color.fromARGB(
-                      255,
-                      218,
-                      4,
-                      11,
-                    ).withOpacity(0.2),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color.fromARGB(255, 218, 4, 11),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Flash Card
-            Expanded(
-              child: Center(
-                child: GestureDetector(
-                  onTap: _flipCard,
-                  child: AnimatedBuilder(
-                    animation: _flipAnimation,
-                    builder: (context, child) {
-                      final isShowingFront = _flipAnimation.value < 0.5;
-                      return Transform(
-                        alignment: Alignment.center,
-                        transform:
-                            Matrix4.identity()
-                              ..setEntry(3, 2, 0.001)
-                              ..rotateY(_flipAnimation.value * 3.14159),
-                        child: Container(
-                          width: double.infinity,
-                          height: 300,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 15,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                            gradient: LinearGradient(
-                              colors:
-                                  isShowingFront
-                                      ? [
-                                        const Color.fromARGB(
-                                          255,
-                                          218,
-                                          4,
-                                          11,
-                                        ).withOpacity(0.1),
-                                        Colors.white,
-                                      ]
-                                      : [
-                                        const Color.fromARGB(
-                                          255,
-                                          180,
-                                          10,
-                                          16,
-                                        ).withOpacity(0.2),
-                                        const Color.fromARGB(
-                                          255,
-                                          218,
-                                          4,
-                                          11,
-                                        ).withOpacity(0.1),
-                                      ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              // Progress indicator
+              Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Kartu ${_currentIndex + 1} dari ${flashCards.length}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromARGB(255, 218, 4, 11),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  isShowingFront
-                                      ? Icons.quiz
-                                      : Icons.lightbulb_outline,
-                                  color: const Color.fromARGB(255, 218, 4, 11),
-                                  size: 40,
-                                ),
-                                const SizedBox(height: 20),
-                                Transform(
-                                  alignment: Alignment.center,
-                                  transform:
-                                      Matrix4.identity()
-                                        ..rotateY(isShowingFront ? 0 : 3.14159),
-                                  child: Text(
-                                    isShowingFront
-                                        ? flashCards[_currentIndex]['front']!
-                                        : flashCards[_currentIndex]['back']!,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey[800],
-                                      height: 1.4,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  isShowingFront
-                                      ? "Ketuk untuk melihat jawaban"
-                                      : "Ketuk untuk melihat pertanyaan",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                  textAlign: TextAlign.center,
+                        ),
+                        IconButton(
+                          onPressed: _resetCards,
+                          icon: const Icon(
+                            Icons.refresh,
+                            color: Color.fromARGB(255, 218, 4, 11),
+                          ),
+                          tooltip: "Reset ke awal",
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: (_currentIndex + 1) / flashCards.length,
+                      backgroundColor: const Color.fromARGB(
+                        255,
+                        218,
+                        4,
+                        11,
+                      ).withOpacity(0.2),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color.fromARGB(255, 218, 4, 11),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Flash Card
+              SizedBox(
+                height: 300,
+                child: Center(
+                  child: GestureDetector(
+                    onTap: _flipCard,
+                    child: AnimatedBuilder(
+                      animation: _flipAnimation,
+                      builder: (context, child) {
+                        final isShowingFront = _flipAnimation.value < 0.5;
+                        final rotationValue = _flipAnimation.value * 3.14159;
+
+                        return Transform(
+                          alignment: Alignment.center,
+                          transform:
+                              Matrix4.identity()
+                                ..setEntry(3, 2, 0.001)
+                                ..rotateY(rotationValue),
+                          child: Container(
+                            width: double.infinity,
+                            height: 300,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 8),
                                 ),
                               ],
+                              gradient: LinearGradient(
+                                colors:
+                                    isShowingFront
+                                        ? [
+                                          const Color.fromARGB(
+                                            255,
+                                            218,
+                                            4,
+                                            11,
+                                          ).withOpacity(0.1),
+                                          Colors.white,
+                                        ]
+                                        : [
+                                          const Color.fromARGB(
+                                            255,
+                                            180,
+                                            10,
+                                            16,
+                                          ).withOpacity(0.2),
+                                          const Color.fromARGB(
+                                            255,
+                                            218,
+                                            4,
+                                            11,
+                                          ).withOpacity(0.1),
+                                        ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: Transform(
+                              alignment: Alignment.center,
+                              transform:
+                                  Matrix4.identity()
+                                    ..rotateY(isShowingFront ? 0 : 3.14159),
+                              child: Padding(
+                                padding: const EdgeInsets.all(24),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      isShowingFront
+                                          ? Icons.quiz
+                                          : Icons.lightbulb_outline,
+                                      color: const Color.fromARGB(
+                                        255,
+                                        218,
+                                        4,
+                                        11,
+                                      ),
+                                      size: 40,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      isShowingFront
+                                          ? flashCards[_currentIndex]['front']!
+                                          : flashCards[_currentIndex]['back']!,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey[800],
+                                        height: 1.4,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      isShowingFront
+                                          ? "Ketuk untuk melihat jawaban"
+                                          : "Ketuk untuk melihat pertanyaan",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            // Navigation buttons
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _currentIndex > 0 ? _previousCard : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[600],
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+              // Navigation buttons
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _currentIndex > 0 ? _previousCard : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[600],
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        icon: const Icon(Icons.arrow_back, size: 20),
+                        label: const Text("Sebelumnya"),
                       ),
-                      icon: const Icon(Icons.arrow_back, size: 20),
-                      label: const Text("Sebelumnya"),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _flipCard,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 218, 4, 11),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _flipCard,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            218,
+                            4,
+                            11,
+                          ),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        icon: const Icon(Icons.flip, size: 20),
+                        label: const Text("Balik"),
                       ),
-                      icon: const Icon(Icons.flip, size: 20),
-                      label: const Text("Balik"),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed:
-                          _currentIndex < flashCards.length - 1
-                              ? _nextCard
-                              : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 180, 10, 16),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            _currentIndex < flashCards.length - 1
+                                ? _nextCard
+                                : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            180,
+                            10,
+                            16,
+                          ),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        icon: const Icon(Icons.arrow_forward, size: 20),
+                        label: const Text("Selanjutnya"),
                       ),
-                      icon: const Icon(Icons.arrow_forward, size: 20),
-                      label: const Text("Selanjutnya"),
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Study statistics
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 218, 4, 11).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color.fromARGB(255, 218, 4, 11).withOpacity(0.3),
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildStatItem(
-                    "Total Kartu",
-                    "${flashCards.length}",
-                    Icons.credit_card,
-                  ),
-                  Container(
-                    height: 30,
-                    width: 1,
+
+              // Study statistics
+              Container(
+                margin: const EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 218, 4, 11).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
                     color: const Color.fromARGB(
                       255,
                       218,
@@ -522,30 +527,50 @@ class _FlashCardScreenState extends State<FlashCardScreen>
                       11,
                     ).withOpacity(0.3),
                   ),
-                  _buildStatItem(
-                    "Dipelajari",
-                    "${_currentIndex + 1}",
-                    Icons.done,
-                  ),
-                  Container(
-                    height: 30,
-                    width: 1,
-                    color: const Color.fromARGB(
-                      255,
-                      218,
-                      4,
-                      11,
-                    ).withOpacity(0.3),
-                  ),
-                  _buildStatItem(
-                    "Tersisa",
-                    "${flashCards.length - _currentIndex - 1}",
-                    Icons.schedule,
-                  ),
-                ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildStatItem(
+                      "Total Kartu",
+                      "${flashCards.length}",
+                      Icons.credit_card,
+                    ),
+                    Container(
+                      height: 30,
+                      width: 1,
+                      color: const Color.fromARGB(
+                        255,
+                        218,
+                        4,
+                        11,
+                      ).withOpacity(0.3),
+                    ),
+                    _buildStatItem(
+                      "Dipelajari",
+                      "${_currentIndex + 1}",
+                      Icons.done,
+                    ),
+                    Container(
+                      height: 30,
+                      width: 1,
+                      color: const Color.fromARGB(
+                        255,
+                        218,
+                        4,
+                        11,
+                      ).withOpacity(0.3),
+                    ),
+                    _buildStatItem(
+                      "Tersisa",
+                      "${flashCards.length - _currentIndex - 1}",
+                      Icons.schedule,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

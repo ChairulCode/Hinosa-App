@@ -204,7 +204,6 @@ class OnboardingScreen1 extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Icon sejarah dengan background putih
                 Container(
                   padding: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
