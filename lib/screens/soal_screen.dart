@@ -21,7 +21,7 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
       'difficulty': 'Mudah',
       'icon': Icons.lightbulb_outline,
       'color': Colors.green,
-      'duration': 15,
+      'duration': 5,
       'chapters': [
         'Administrasi Pemerintahan',
         'Organisasi dan Kehidupan Sosial',
@@ -35,7 +35,7 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
       'difficulty': 'Sulit',
       'icon': Icons.psychology,
       'color': Colors.red,
-      'duration': 25,
+      'duration': 10,
       'chapters': [
         'Romusha dan Mobilisasi Rakyat',
         'Ekonomi Perang',
@@ -68,34 +68,28 @@ class _SoalScreenState extends State<SoalScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
-        child: AppBar(
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: const Color.fromARGB(
-            255,
-            218,
-            4,
-            11,
-          ), // 🔴 warna solid
-          title: const Text(
-            "Latihan Soal ",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Colors.white,
-            ),
+      appBar: AppBar(
+        toolbarHeight: 80,
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: const Color.fromARGB(255, 218, 4, 11),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text(
+          "Latihan Soal ",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-            ),
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
           ),
         ),
       ),
